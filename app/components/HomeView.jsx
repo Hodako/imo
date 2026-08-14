@@ -28,12 +28,98 @@ export default function HomeView({ initialConfig = {} }) {
   const sec3 = sections.section3 || {};
   const sec4 = sections.section4 || {};
   const sec5 = sections.section5 || {};
+  const colors = config.colors || {};
 
   const heroTitleText = hero.title || 'Free, Simple,\nand Secure';
   const heroTitleLines = heroTitleText.split('\n');
 
   return (
     <div data-v-3d13c7c6="" data-v-56b2566a="" className="layout home">
+      {/* Dynamic Theme & Text Colors */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .desktop-header-download-btn,
+        .mobile-header-download-pill,
+        .desktop-hero-download-btn,
+        .mobile-direct-download-btn,
+        .mobile-drawer-download-btn,
+        .download-wrapper .download {
+          background: ${colors.primary || '#009dff'} !important;
+          background-color: ${colors.primary || '#009dff'} !important;
+        }
+        .desktop-header-download-btn:hover,
+        .desktop-hero-download-btn:hover {
+          background: ${colors.primaryHover || '#0088de'} !important;
+        }
+        .desktop-header-web-btn {
+          border-color: ${colors.primary || '#009dff'} !important;
+          color: ${colors.primary || '#009dff'} !important;
+        }
+        .desktop-nav-link.active,
+        .desktop-more-versions-btn,
+        .mobile-more-versions-link {
+          color: ${colors.primary || '#009dff'} !important;
+        }
+        .hero-main-title {
+          color: ${colors.heroTitleColor || colors.primary || '#009dff'} !important;
+        }
+        .hero-main-desc {
+          color: ${colors.heroDescColor || colors.primary || '#009dff'} !important;
+        }
+        .audio-section,
+        .vedio-section {
+          background: ${colors.sec1Bg || '#0093ff'} !important;
+          background-color: ${colors.sec1Bg || '#0093ff'} !important;
+          color: ${colors.sec1Text || '#ffffff'} !important;
+        }
+        .audio-section-title,
+        .audio-section-desc,
+        .audio-section-badge {
+          color: ${colors.sec1Text || '#ffffff'} !important;
+        }
+        .global-call-section-wrap,
+        .global-call-section {
+          background: ${colors.sec2Bg || '#131b21'} !important;
+          background-color: ${colors.sec2Bg || '#131b21'} !important;
+          color: ${colors.sec2Text || '#009dff'} !important;
+        }
+        .global-call-section .left__title,
+        .global-call-section .left__header span,
+        .global-call-section .left__desc {
+          color: ${colors.sec2Text || '#009dff'} !important;
+        }
+        .private-section {
+          background: ${colors.sec3Bg || '#c8ebff'} !important;
+          background-color: ${colors.sec3Bg || '#c8ebff'} !important;
+        }
+        .private-section .left__title,
+        .private-section .left__header span,
+        .private-section .left__desc {
+          color: ${colors.sec3Text || '#009dff'} !important;
+        }
+        .secure-section {
+          background: ${colors.sec4Bg || '#009dff'} !important;
+          background-color: ${colors.sec4Bg || '#009dff'} !important;
+        }
+        .secure-section .left__title,
+        .secure-section .left__header span,
+        .secure-section .left__desc {
+          color: ${colors.sec4Text || '#ffffff'} !important;
+        }
+        .translate-section {
+          background: ${colors.sec5Bg || '#c8ebff'} !important;
+          background-color: ${colors.sec5Bg || '#c8ebff'} !important;
+        }
+        .translate-section .left__title,
+        .translate-section .left__header span,
+        .translate-section .left__desc {
+          color: ${colors.sec5Text || '#009dff'} !important;
+        }
+        .footer {
+          background: ${colors.footerBg || '#131b21'} !important;
+          background-color: ${colors.footerBg || '#131b21'} !important;
+          color: ${colors.footerText || '#ffffff'} !important;
+        }
+      `}} />
       {/* ===== DESKTOP HEADER (Matches Screenshot) ===== */}
       <header data-v-e4c80980="" data-v-3d13c7c6="" className="header desktop-header" id="imoHeader">
         <div data-v-e4c80980="" className="desktop-header-container max-width flex a-center j-between">

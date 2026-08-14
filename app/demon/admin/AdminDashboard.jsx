@@ -4,6 +4,135 @@ import { useState, useRef, useEffect } from 'react';
 import styles from './admin.module.css';
 import { logoutAdmin, saveSiteConfigAction, saveApkUrlAction, changePasswordAction } from './actions';
 
+const DEFAULT_THEME_COLORS = {
+  primary: '#009dff',
+  primaryHover: '#0088de',
+  primaryGradient: '#00c2ff',
+  heroTitleColor: '#009dff',
+  heroDescColor: '#009dff',
+  bodyTextColor: '#222222',
+  sec1Bg: '#0093ff',
+  sec1Text: '#ffffff',
+  sec2Bg: '#131b21',
+  sec2Text: '#009dff',
+  sec3Bg: '#c8ebff',
+  sec3Text: '#009dff',
+  sec4Bg: '#009dff',
+  sec4Text: '#ffffff',
+  sec5Bg: '#c8ebff',
+  sec5Text: '#009dff',
+  footerBg: '#131b21',
+  footerText: '#ffffff',
+};
+
+const THEME_PRESETS = [
+  {
+    name: '🔵 imo Classic Blue',
+    colors: {
+      primary: '#009dff',
+      primaryHover: '#0088de',
+      heroTitleColor: '#009dff',
+      heroDescColor: '#009dff',
+      sec1Bg: '#0093ff',
+      sec1Text: '#ffffff',
+      sec2Bg: '#131b21',
+      sec2Text: '#009dff',
+      sec3Bg: '#c8ebff',
+      sec3Text: '#009dff',
+      sec4Bg: '#009dff',
+      sec4Text: '#ffffff',
+      sec5Bg: '#c8ebff',
+      sec5Text: '#009dff',
+      footerBg: '#131b21',
+      footerText: '#ffffff',
+    },
+  },
+  {
+    name: '🟢 Emerald Green',
+    colors: {
+      primary: '#25D366',
+      primaryHover: '#1eb956',
+      heroTitleColor: '#25D366',
+      heroDescColor: '#128C7E',
+      sec1Bg: '#128C7E',
+      sec1Text: '#ffffff',
+      sec2Bg: '#075E54',
+      sec2Text: '#25D366',
+      sec3Bg: '#dcf8c6',
+      sec3Text: '#075E54',
+      sec4Bg: '#128C7E',
+      sec4Text: '#ffffff',
+      sec5Bg: '#dcf8c6',
+      sec5Text: '#075E54',
+      footerBg: '#075E54',
+      footerText: '#ffffff',
+    },
+  },
+  {
+    name: '🟣 Royal Violet',
+    colors: {
+      primary: '#6366f1',
+      primaryHover: '#4f46e5',
+      heroTitleColor: '#6366f1',
+      heroDescColor: '#4f46e5',
+      sec1Bg: '#4f46e5',
+      sec1Text: '#ffffff',
+      sec2Bg: '#1e1b4b',
+      sec2Text: '#a5b4fc',
+      sec3Bg: '#e0e7ff',
+      sec3Text: '#4338ca',
+      sec4Bg: '#4f46e5',
+      sec4Text: '#ffffff',
+      sec5Bg: '#e0e7ff',
+      sec5Text: '#4338ca',
+      footerBg: '#1e1b4b',
+      footerText: '#ffffff',
+    },
+  },
+  {
+    name: '🌑 Midnight Dark',
+    colors: {
+      primary: '#38bdf8',
+      primaryHover: '#0284c7',
+      heroTitleColor: '#38bdf8',
+      heroDescColor: '#94a3b8',
+      sec1Bg: '#1e293b',
+      sec1Text: '#f8fafc',
+      sec2Bg: '#0f172a',
+      sec2Text: '#38bdf8',
+      sec3Bg: '#334155',
+      sec3Text: '#38bdf8',
+      sec4Bg: '#1e293b',
+      sec4Text: '#f8fafc',
+      sec5Bg: '#334155',
+      sec5Text: '#38bdf8',
+      footerBg: '#020617',
+      footerText: '#f8fafc',
+    },
+  },
+  {
+    name: '🔴 Crimson Red',
+    colors: {
+      primary: '#e11d48',
+      primaryHover: '#be123c',
+      heroTitleColor: '#e11d48',
+      heroDescColor: '#be123c',
+      sec1Bg: '#be123c',
+      sec1Text: '#ffffff',
+      sec2Bg: '#4c0519',
+      sec2Text: '#fda4af',
+      sec3Bg: '#ffe4e6',
+      sec3Text: '#be123c',
+      sec4Bg: '#be123c',
+      sec4Text: '#ffffff',
+      sec5Bg: '#ffe4e6',
+      sec5Text: '#be123c',
+      footerBg: '#4c0519',
+      footerText: '#ffffff',
+    },
+  },
+];
+
 export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false }) {
   const [activeTab, setActiveTab] = useState('general');
   const [config, setConfig] = useState(initialConfig);
@@ -52,6 +181,36 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
         },
       },
     }));
+  }
+
+  // Colors updater
+  function updateColor(key, value) {
+    setConfig((prev) => ({
+      ...prev,
+      colors: {
+        ...(prev.colors || DEFAULT_THEME_COLORS),
+        [key]: value,
+      },
+    }));
+  }
+
+  function applyPreset(presetColors) {
+    setConfig((prev) => ({
+      ...prev,
+      colors: {
+        ...(prev.colors || DEFAULT_THEME_COLORS),
+        ...presetColors,
+      },
+    }));
+    setStatus({ type: 'success', msg: '🎨 Preset applied! Click "Save Colors" below to publish.' });
+  }
+
+  function resetColorsToDefault() {
+    setConfig((prev) => ({
+      ...prev,
+      colors: { ...DEFAULT_THEME_COLORS },
+    }));
+    setStatus({ type: 'success', msg: '🔄 Colors reset to default! Click "Save Colors" to publish.' });
   }
 
   // Save current config
@@ -272,6 +431,31 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
     );
   }
 
+  // Color picker field sub-component
+  function ColorPickerField({ label, colorKey, defaultHex = '#009dff' }) {
+    const currentColor = config.colors?.[colorKey] || defaultHex;
+    return (
+      <div className={styles.colorControlCard}>
+        <label className={styles.formLabel}>{label}</label>
+        <div className={styles.colorInputRow}>
+          <input
+            type="color"
+            className={styles.colorNativePicker}
+            value={currentColor.startsWith('#') ? currentColor : defaultHex}
+            onChange={(e) => updateColor(colorKey, e.target.value)}
+          />
+          <input
+            type="text"
+            className={styles.input}
+            value={currentColor}
+            onChange={(e) => updateColor(colorKey, e.target.value)}
+            placeholder="#009dff"
+          />
+        </div>
+      </div>
+    );
+  }
+
   const currentApkUrl = config.apk?.apkUrl || config.apkUrl || '';
 
   return (
@@ -300,6 +484,9 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           <button className={`${styles.sideNavLink} ${activeTab === 'sections' ? styles.active : ''}`} onClick={() => setActiveTab('sections')}>
             📱 Feature Sections
           </button>
+          <button className={`${styles.sideNavLink} ${activeTab === 'colors' ? styles.active : ''}`} onClick={() => setActiveTab('colors')}>
+            🎨 Theme &amp; Colors
+          </button>
           <button className={`${styles.sideNavLink} ${activeTab === 'links' ? styles.active : ''}`} onClick={() => setActiveTab('links')}>
             🔗 Links &amp; Redirects
           </button>
@@ -321,25 +508,28 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
       <main className={styles.main}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Site Customizer &amp; Admin Panel</h1>
-          <p className={styles.pageDesc}>Edit any text, upload images, manage redirects, update APK downloads, or change passwords in real-time.</p>
+          <p className={styles.pageDesc}>Edit any text, customize colors, upload images, manage redirects, update APK downloads, or change passwords in real-time.</p>
         </div>
 
         {/* TABS HEADER FOR MOBILE / QUICK SWITCH */}
         <div className={styles.tabsNav}>
           <button className={`${styles.tabBtn} ${activeTab === 'general' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('general')}>
-            🌐 General &amp; Branding
+            🌐 Branding
           </button>
           <button className={`${styles.tabBtn} ${activeTab === 'hero' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('hero')}>
-            🚀 Hero Section
+            🚀 Hero
           </button>
           <button className={`${styles.tabBtn} ${activeTab === 'sections' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('sections')}>
             📱 Features
+          </button>
+          <button className={`${styles.tabBtn} ${activeTab === 'colors' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('colors')}>
+            🎨 Colors
           </button>
           <button className={`${styles.tabBtn} ${activeTab === 'links' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('links')}>
             🔗 Redirects
           </button>
           <button className={`${styles.tabBtn} ${activeTab === 'apk' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('apk')}>
-            📦 APK Download
+            📦 APK
           </button>
           <button className={`${styles.tabBtn} ${activeTab === 'security' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('security')}>
             🔒 Password
@@ -727,7 +917,87 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           </form>
         )}
 
-        {/* ==================== TAB 4: LINKS & REDIRECTS ==================== */}
+        {/* ==================== TAB 4: THEME & TEXT COLORS ==================== */}
+        {activeTab === 'colors' && (
+          <form onSubmit={handleSaveConfig} className={styles.form}>
+            {/* Quick 1-Click Presets */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>1-Click Theme Presets</h2>
+                <p className={styles.cardDesc}>Select a curated harmonious color scheme or customize each color below.</p>
+              </div>
+              <div className={styles.presetGrid}>
+                {THEME_PRESETS.map((preset, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={styles.presetBtn}
+                    onClick={() => applyPreset(preset.colors)}
+                  >
+                    <span className={styles.presetDot} style={{ backgroundColor: preset.colors.primary }} />
+                    <span>{preset.name}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className={styles.btnSmall}
+                onClick={resetColorsToDefault}
+              >
+                🔄 Reset All Colors to Default (imo Blue)
+              </button>
+            </div>
+
+            {/* Global Brand & Button Colors */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Primary Brand &amp; Hero Colors</h2>
+                <p className={styles.cardDesc}>Controls download buttons, active navigation links, and hero headlines.</p>
+              </div>
+              <div className={styles.colorCardGrid}>
+                <ColorPickerField label="Primary Theme Color (Buttons & Active Links)" colorKey="primary" defaultHex="#009dff" />
+                <ColorPickerField label="Primary Button Hover Color" colorKey="primaryHover" defaultHex="#0088de" />
+                <ColorPickerField label="Hero Headline Color" colorKey="heroTitleColor" defaultHex="#009dff" />
+                <ColorPickerField label="Hero Subtitle Color" colorKey="heroDescColor" defaultHex="#009dff" />
+              </div>
+            </div>
+
+            {/* Feature Section Colors */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Feature Section Background &amp; Text Colors</h2>
+                <p className={styles.cardDesc}>Customize the background and text color of each individual landing page section.</p>
+              </div>
+              <div className={styles.colorCardGrid}>
+                <ColorPickerField label="Section 1 Background (HD Calls)" colorKey="sec1Bg" defaultHex="#0093ff" />
+                <ColorPickerField label="Section 1 Text Color" colorKey="sec1Text" defaultHex="#ffffff" />
+
+                <ColorPickerField label="Section 2 Background (Global Calls)" colorKey="sec2Bg" defaultHex="#131b21" />
+                <ColorPickerField label="Section 2 Text Color" colorKey="sec2Text" defaultHex="#009dff" />
+
+                <ColorPickerField label="Section 3 Background (Privacy)" colorKey="sec3Bg" defaultHex="#c8ebff" />
+                <ColorPickerField label="Section 3 Text Color" colorKey="sec3Text" defaultHex="#009dff" />
+
+                <ColorPickerField label="Section 4 Background (Security)" colorKey="sec4Bg" defaultHex="#009dff" />
+                <ColorPickerField label="Section 4 Text Color" colorKey="sec4Text" defaultHex="#ffffff" />
+
+                <ColorPickerField label="Section 5 Background (Translation)" colorKey="sec5Bg" defaultHex="#c8ebff" />
+                <ColorPickerField label="Section 5 Text Color" colorKey="sec5Text" defaultHex="#009dff" />
+
+                <ColorPickerField label="Footer Background Color" colorKey="footerBg" defaultHex="#131b21" />
+                <ColorPickerField label="Footer Text Color" colorKey="footerText" defaultHex="#ffffff" />
+              </div>
+            </div>
+
+            <div className={styles.btnRow} style={{ marginTop: '10px' }}>
+              <button type="submit" className={styles.btnPrimary} disabled={saving}>
+                {saving ? 'Saving…' : '💾 Save Theme & Text Colors'}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* ==================== TAB 5: LINKS & REDIRECTS ==================== */}
         {activeTab === 'links' && (
           <form onSubmit={handleSaveConfig} className={styles.form}>
             <div className={styles.card}>
@@ -824,7 +1094,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           </form>
         )}
 
-        {/* ==================== TAB 5: APK MANAGER ==================== */}
+        {/* ==================== TAB 6: APK MANAGER ==================== */}
         {activeTab === 'apk' && (
           <div className={styles.form}>
             {/* 1. Active APK Card */}
@@ -950,7 +1220,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           </div>
         )}
 
-        {/* ==================== TAB 6: SECURITY / PASSWORD ==================== */}
+        {/* ==================== TAB 7: SECURITY / PASSWORD ==================== */}
         {activeTab === 'security' && (
           <div className={styles.card}>
             <div className={styles.cardHeader}>

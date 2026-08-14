@@ -371,6 +371,86 @@
   background: rgba(0, 157, 255, 0.25);
 }
 
+/* ===== COLOR PICKER CONTROLS ===== */
+.colorCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.colorControlCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colorInputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.colorNativePicker {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 42px;
+  height: 42px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.colorNativePicker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorNativePicker::-webkit-color-swatch {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+}
+
+.presetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.presetBtn {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #161b22;
+  color: #e6edf3;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s ease;
+}
+
+.presetBtn:hover {
+  background: #21262d;
+  border-color: #58a6ff;
+}
+
+.presetDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* URL Status Chip & Controls */
 .currentUrlBox {
   width: 100%;

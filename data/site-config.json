@@ -3,7 +3,7 @@
   "site": {
     "title": "imo - Free Video Calls and Chat",
     "name": "Whatsapp",
-    "description": "imo is a free, simple, and secure video calling and instant messaging app.",
+    "description": "Whatsapp is a free, simple, and secure video calling and instant messaging app.",
     "logoUrl": "/imo_files/imo.30ad61b6.png",
     "faviconUrl": "/imo_files/imo.30ad61b6.png"
   },
@@ -66,6 +66,26 @@
     "aboutUsUrl": "",
     "policyUrl": "",
     "facebookUrl": ""
+  },
+  "colors": {
+    "primary": "#009dff",
+    "primaryHover": "#0088de",
+    "primaryGradient": "#00c2ff",
+    "heroTitleColor": "#009dff",
+    "heroDescColor": "#009dff",
+    "bodyTextColor": "#222222",
+    "sec1Bg": "#0093ff",
+    "sec1Text": "#ffffff",
+    "sec2Bg": "#131b21",
+    "sec2Text": "#009dff",
+    "sec3Bg": "#c8ebff",
+    "sec3Text": "#009dff",
+    "sec4Bg": "#009dff",
+    "sec4Text": "#ffffff",
+    "sec5Bg": "#c8ebff",
+    "sec5Text": "#009dff",
+    "footerBg": "#131b21",
+    "footerText": "#ffffff"
   },
   "apk": {
     "apkUrl": ""
