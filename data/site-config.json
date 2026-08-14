@@ -1,0 +1,73 @@
+{
+  "adminPassword": "admin123",
+  "site": {
+    "title": "imo - Free Video Calls and Chat",
+    "name": "imo",
+    "description": "imo is a free, simple, and secure video calling and instant messaging app.",
+    "logoUrl": "/imo_files/imo.30ad61b6.png",
+    "faviconUrl": "/imo_files/imo.30ad61b6.png"
+  },
+  "hero": {
+    "title": "Free, Simple,\nand Secure",
+    "subtitle": "Connect with your loved ones through calls and messages.",
+    "downloadBtnText": "Download Now",
+    "moreVersionsText": "More Versions >",
+    "artworkImage": "/imo_files/bg-home-first-image.842b02fa.png",
+    "bgImage": "/cdn-assets-s/imo-official/img/bg-top.cd690b6a.png"
+  },
+  "sections": {
+    "section1": {
+      "id": "audio",
+      "badgeText": "Audio & Video",
+      "badgeIcon": "/imo_files/icon-video-light.d5af9c91.png",
+      "title": "Free, Secure, HD Calls",
+      "desc": "Crystal-clear calls for all connections, regardless of network.",
+      "image": "/imo_files/bg-video-call.6259fb3f.png"
+    },
+    "section2": {
+      "id": "global",
+      "badgeText": "Global Call",
+      "badgeIcon": "/imo_files/icon-video-dark.229c7d5c.png",
+      "title": "Free International Calls",
+      "desc": "Connect with anyone, anywhere in the world, on any network with low cost or free.",
+      "image": "/imo_files/global-call.a744bcae.png"
+    },
+    "section3": {
+      "id": "private",
+      "badgeText": "Privacy",
+      "badgeIcon": "/imo_files/icon-private.84088b7b.png",
+      "title": "Private Call",
+      "desc": "Enjoy completely private chats and calls with built-in end-to-end encryption.",
+      "image": "/imo_files/bg-private.2df28805.png"
+    },
+    "section4": {
+      "id": "secure",
+      "badgeText": "Security",
+      "badgeIcon": "/imo_files/icon-secure.42e65266.png",
+      "title": "Secure Communication",
+      "desc": "End-to-end encrypted messaging to keep all your personal messages confidential.",
+      "image": "/imo_files/bg-secure.6c5e7e8b.png"
+    },
+    "section5": {
+      "id": "translate",
+      "badgeText": "Translation",
+      "badgeIcon": "/imo_files/icon-translate.5479bb7f.png",
+      "title": "Instant Message Translation",
+      "desc": "Translate messages effortlessly for seamless cross-language conversations.",
+      "image": "/imo_files/bg-translate.9257ccaa.png"
+    }
+  },
+  "links": {
+    "homeUrl": "/",
+    "blogUrl": "",
+    "helpCenterUrl": "",
+    "appsUrl": "",
+    "imoWebUrl": "",
+    "aboutUsUrl": "",
+    "policyUrl": "",
+    "facebookUrl": ""
+  },
+  "apk": {
+    "apkUrl": ""
+  }
+}

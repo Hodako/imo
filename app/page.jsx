@@ -1,11 +1,22 @@
 import HomeView from './components/HomeView';
+import { getStoredConfig } from './demon/admin/actions';
 
-export const metadata = {
-  title: 'imo: Free Video Calls and Messages - Official Website',
-  description: "Stay connected with family and friends using imo's free video calling app. Enjoy free video chats, 1-on-1 calls, audio calls, and international calls!",
-  keywords: 'imo, video calls, free calls, messaging, international calls',
-};
+export const dynamic = 'force-dynamic';
 
-export default function Page() {
-  return <HomeView />;
+export async function generateMetadata() {
+  const config = await getStoredConfig();
+  const site = config.site || {};
+  return {
+    title: site.title || 'imo: Free Video Calls and Messages - Official Website',
+    description: site.description || "Stay connected with family and friends using imo's free video calling app.",
+    icons: {
+      icon: site.faviconUrl || site.logoUrl || '/imo_files/imo.30ad61b6.png',
+      apple: site.logoUrl || '/imo_files/imo.30ad61b6.png',
+    },
+  };
+}
+
+export default async function Page() {
+  const config = await getStoredConfig();
+  return <HomeView initialConfig={config} />;
 }

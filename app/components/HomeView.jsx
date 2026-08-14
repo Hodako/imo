@@ -1,10 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DownloadButton from './DownloadButton';
 
-export default function HomeView() {
+export default function HomeView({ initialConfig = {} }) {
+  const [config, setConfig] = useState(initialConfig);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Sync client state with fresh config from API on mount
+  useEffect(() => {
+    fetch('/api/site-config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.config) {
+          setConfig(data.config);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const site = config.site || {};
+  const hero = config.hero || {};
+  const sections = config.sections || {};
+  const links = config.links || {};
+
+  const sec1 = sections.section1 || {};
+  const sec2 = sections.section2 || {};
+  const sec3 = sections.section3 || {};
+  const sec4 = sections.section4 || {};
+  const sec5 = sections.section5 || {};
+
+  // Parse hero title with line breaks
+  const heroTitleText = hero.title || 'Free, Simple,\nand Secure';
+  const heroTitleLines = heroTitleText.split('\n');
 
   return (
     <div data-v-3d13c7c6="" data-v-56b2566a="" className="layout home">
@@ -15,18 +43,29 @@ export default function HomeView() {
           {/* Left: Logo */}
           <div data-v-e4c80980="" className="icon-logo desktop-logo">
             <a href="/">
-              <img data-v-e4c80980="" alt="imo logo" src="/imo_files/imo.30ad61b6.png" className="desktop-logo-img" />
+              <img
+                data-v-e4c80980=""
+                alt={site.name || 'imo logo'}
+                src={site.logoUrl || '/imo_files/imo.30ad61b6.png'}
+                className="desktop-logo-img"
+              />
             </a>
           </div>
 
           {/* Center: Navigation Menu */}
           <ul data-v-e4c80980="" className="flex a-center j-center desktop-nav-menu">
             <li data-v-e4c80980="" className="desktop-nav-item active">
-              <a data-v-e4c80980="" href="/" className="desktop-nav-link active">Home</a>
+              <a data-v-e4c80980="" href={links.homeUrl || '/'} className="desktop-nav-link active">Home</a>
             </li>
             <li data-v-e4c80980="" className="desktop-nav-item">
               <div data-v-8d9519de="" data-v-e4c80980="" className="dropdown">
-                <a href="https://imo.im/blog" className="desktop-nav-link flex a-center">
+                <a
+                  href={links.blogUrl || 'javascript:void(0)'}
+                  target={links.blogUrl ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="desktop-nav-link flex a-center"
+                  style={{ cursor: links.blogUrl ? 'pointer' : 'default' }}
+                >
                   <span>Blog</span>
                   <svg width="10" height="6" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="nav-chevron">
                     <path d="M1.4 0L6 4.6L10.6 0L12 1.4L6 7.4L0 1.4L1.4 0Z" fill="currentColor" />
@@ -36,7 +75,14 @@ export default function HomeView() {
             </li>
             <li data-v-e4c80980="" className="desktop-nav-item">
               <div data-v-8d9519de="" data-v-e4c80980="" className="dropdown">
-                <a data-v-e4c80980="" href="https://imo.im/faq" className="desktop-nav-link flex a-center">
+                <a
+                  data-v-e4c80980=""
+                  href={links.helpCenterUrl || 'javascript:void(0)'}
+                  target={links.helpCenterUrl ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="desktop-nav-link flex a-center"
+                  style={{ cursor: links.helpCenterUrl ? 'pointer' : 'default' }}
+                >
                   <span>Help Center</span>
                   <svg width="10" height="6" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="nav-chevron">
                     <path d="M1.4 0L6 4.6L10.6 0L12 1.4L6 7.4L0 1.4L1.4 0Z" fill="currentColor" />
@@ -45,25 +91,43 @@ export default function HomeView() {
               </div>
             </li>
             <li data-v-e4c80980="" className="desktop-nav-item">
-              <a data-v-e4c80980="" href="https://imo.im/log" className="desktop-nav-link">Apps</a>
+              <a
+                data-v-e4c80980=""
+                href={links.appsUrl || 'javascript:void(0)'}
+                target={links.appsUrl ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className="desktop-nav-link"
+                style={{ cursor: links.appsUrl ? 'pointer' : 'default' }}
+              >
+                Apps
+              </a>
             </li>
           </ul>
 
           {/* Right: Actions (imo Web > and Download ⤓) */}
           <div className="desktop-header-actions flex a-center">
-            <a
-              href="https://web.imo.im/?source=official-header"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="desktop-header-web-btn flex a-center j-center"
-            >
-              <span>imo Web</span>
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 9L5 5L1 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
+            {links.imoWebUrl ? (
+              <a
+                href={links.imoWebUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="desktop-header-web-btn flex a-center j-center"
+              >
+                <span>imo Web</span>
+                <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 9L5 5L1 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            ) : (
+              <div className="desktop-header-web-btn flex a-center j-center" style={{ cursor: 'default' }}>
+                <span>imo Web</span>
+                <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 9L5 5L1 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            )}
             <DownloadButton className="desktop-header-download-btn flex a-center j-center">
-              <span>Download</span>
+              <span>{hero.downloadBtnText || 'Download'}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
@@ -92,7 +156,12 @@ export default function HomeView() {
 
           <div className="mobile-header-logo">
             <a href="/">
-              <img width="42" height="42" alt="imo logo" src="/imo_files/imo.30ad61b6.png" />
+              <img
+                width="42"
+                height="42"
+                alt={site.name || 'imo logo'}
+                src={site.logoUrl || '/imo_files/imo.30ad61b6.png'}
+              />
             </a>
           </div>
 
@@ -111,20 +180,32 @@ export default function HomeView() {
         <div className="mobile-nav-overlay" onClick={() => setMobileMenuOpen(false)}>
           <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-nav-header">
-              <img src="/imo_files/imo.30ad61b6.png" alt="imo logo" className="mobile-nav-logo" />
+              <img
+                src={site.logoUrl || '/imo_files/imo.30ad61b6.png'}
+                alt={site.name || 'imo logo'}
+                className="mobile-nav-logo"
+              />
               <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>✕</button>
             </div>
             <ul className="mobile-nav-links">
-              <li><a href="/" onClick={() => setMobileMenuOpen(false)}>🏠 Home</a></li>
-              <li><a href="https://imo.im/blog" target="_blank" rel="noopener noreferrer">📝 Blog</a></li>
-              <li><a href="https://imo.im/faq" target="_blank" rel="noopener noreferrer">❓ Help Center</a></li>
-              <li><a href="https://imo.im/log" target="_blank" rel="noopener noreferrer">📱 Apps</a></li>
-              <li><a href="https://web.imo.im/?source=official-header" target="_blank" rel="noopener noreferrer">🌐 imo Web</a></li>
+              <li><a href={links.homeUrl || '/'} onClick={() => setMobileMenuOpen(false)}>🏠 Home</a></li>
+              {links.blogUrl && (
+                <li><a href={links.blogUrl} target="_blank" rel="noopener noreferrer">📝 Blog</a></li>
+              )}
+              {links.helpCenterUrl && (
+                <li><a href={links.helpCenterUrl} target="_blank" rel="noopener noreferrer">❓ Help Center</a></li>
+              )}
+              {links.appsUrl && (
+                <li><a href={links.appsUrl} target="_blank" rel="noopener noreferrer">📱 Apps</a></li>
+              )}
+              {links.imoWebUrl && (
+                <li><a href={links.imoWebUrl} target="_blank" rel="noopener noreferrer">🌐 imo Web</a></li>
+              )}
             </ul>
             <div className="mobile-nav-cta">
               <DownloadButton className="mobile-drawer-download-btn">
                 <AndroidRobotSVG />
-                <span>Download Now</span>
+                <span>{hero.downloadBtnText || 'Download Now'}</span>
               </DownloadButton>
             </div>
           </div>
@@ -135,23 +216,28 @@ export default function HomeView() {
       <div data-v-3d13c7c6="" className="content max-width">
         <div data-v-56b2566a="" data-v-3d13c7c6="" className="container">
 
-          {/* ===== HERO SECTION (Matches Screenshot) ===== */}
+          {/* ===== HERO SECTION ===== */}
           <div data-v-56b2566a="" data-v-3d13c7c6="" className="top hero-section">
             <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex hero-flex">
               
               {/* Left Column (Headline, Subtitle, Download CTA, Platforms) */}
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="top-left hero-text-col">
                 <h1 data-v-56b2566a="" data-v-3d13c7c6="" className="top-left__title hero-main-title">
-                  Free, Simple,<br className="desktop-br" /> and Secure
+                  {heroTitleLines.map((line, idx) => (
+                    <span key={idx}>
+                      {line}
+                      {idx < heroTitleLines.length - 1 && <br className="desktop-br" />}
+                    </span>
+                  ))}
                 </h1>
                 <p data-v-56b2566a="" data-v-3d13c7c6="" className="top-left__desc hero-main-desc">
-                  Connect with your loved ones through calls and messages.
+                  {hero.subtitle || 'Connect with your loved ones through calls and messages.'}
                 </p>
 
-                {/* Desktop Primary Download Button (Matches Screenshot) */}
+                {/* Desktop Primary Download Button */}
                 <div className="desktop-hero-cta-wrap desktop-only-cta">
                   <DownloadButton className="desktop-hero-download-btn">
-                    <span>Download</span>
+                    <span>{hero.downloadBtnText || 'Download'}</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="7 10 12 15 17 10"/>
@@ -160,141 +246,197 @@ export default function HomeView() {
                   </DownloadButton>
                 </div>
 
-                {/* Desktop Platform Icons Row (Chrome, Windows, Mac, Android, More Versions >) */}
+                {/* Desktop Platform Icons Row + More Versions Link */}
                 <div className="desktop-platforms-row desktop-only-cta">
                   <div className="desktop-platform-icons">
-                    <span className="desktop-platform-icon-wrap" title="Chrome / Browser">
+                    <span className="desktop-platform-icon-wrap" title="Browser">
                       <img src="/imo_files/icon-mac-blue.e9c0aaa1.png" alt="Browser" className="plat-icon" />
                     </span>
                     <span className="desktop-platform-icon-wrap" title="Windows">
                       <img src="/imo_files/icon-win-blue.3a090cce.png" alt="Windows" className="plat-icon" />
                     </span>
-                    <span className="desktop-platform-icon-wrap" title="Apple / Mac / iOS">
-                      <img src="/imo_files/icon-ios-blue.9a8ec9e9.png" alt="iOS/Mac" className="plat-icon" />
+                    <span className="desktop-platform-icon-wrap" title="Apple">
+                      <img src="/imo_files/icon-ios-blue.9a8ec9e9.png" alt="Apple" className="plat-icon" />
                     </span>
                     <span className="desktop-platform-icon-wrap" title="Android">
                       <img src="/imo_files/icon-android-blue.992186a1.png" alt="Android" className="plat-icon" />
                     </span>
                   </div>
                   <DownloadButton className="desktop-more-versions-btn">
-                    More Versions &gt;
+                    <span>{hero.moreVersionsText || 'More Versions >'}</span>
                   </DownloadButton>
                 </div>
               </div>
 
-              {/* Right Column: Hero Artwork Collage */}
+              {/* Right Column: Hero Collage Artwork Image */}
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="top-right hero-image-col">
-                <div data-v-56b2566a="" data-v-3d13c7c6="" className="img-wrapper desktop-hero-img-wrap">
-                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="fixed-topbg">
-                    <img
-                      data-v-56b2566a=""
-                      data-v-3d13c7c6=""
-                      alt="imo calls and messages"
-                      className="top-right__bg hero-artwork-img"
-                      src="/imo_files/bg-home-first-image.842b02fa.png"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Mobile-only Download CTA */}
-              <div className="mobile-hero-cta">
-                <DownloadButton className="mobile-direct-download-btn" style={{ cursor: 'pointer' }}>
-                  <AndroidRobotSVG />
-                  <span className="btn-text">Download Now</span>
-                </DownloadButton>
-                <div className="mobile-more-versions">
-                  <DownloadButton className="mobile-more-versions-link" style={{ cursor: 'pointer' }}>
-                    More Versions &gt;
-                  </DownloadButton>
+                <div data-v-56b2566a="" className="img-wrapper desktop-hero-img-wrap">
+                  <img
+                    data-v-56b2566a=""
+                    src={hero.artworkImage || '/imo_files/bg-home-first-image.842b02fa.png'}
+                    alt="imo connected collage"
+                    className="hero-artwork-img"
+                  />
                 </div>
               </div>
 
             </div>
+
+            {/* Mobile Direct Download Button */}
+            <div className="mobile-hero-cta">
+              <DownloadButton className="mobile-direct-download-btn">
+                <AndroidRobotSVG />
+                <span className="btn-text">{hero.downloadBtnText || 'Download Now'}</span>
+              </DownloadButton>
+              <div className="mobile-more-versions">
+                <DownloadButton className="mobile-more-versions-link">
+                  <span>{hero.moreVersionsText || 'More Versions >'}</span>
+                </DownloadButton>
+              </div>
+            </div>
+
           </div>
 
-          {/* ===== SECTION 1: FREE, SECURE, HD CALLS ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" id="audio" className="feature-section audio-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container vedio-section h-768">
+          {/* ===== SECTION 1: AUDIO & VIDEO / HD CALLS ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" id="audio" className="feature-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container audio-section vedio-section">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
-                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header audio-section-badge">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/icon-video-light.d5af9c91.png" alt="vedioIcon" />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">Audio &amp; Video</span>
+                  <div className="audio-section-badge">
+                    <img
+                      src={sec1.badgeIcon || '/imo_files/icon-video-light.d5af9c91.png'}
+                      alt="videoIcon"
+                      className="section-badge-icon"
+                    />
+                    <span>{sec1.badgeText || 'Audio & Video'}</span>
                   </div>
-                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title audio-section-title">
-                    Free, Secure, HD Calls
+                  <h2 className="audio-section-title">
+                    {sec1.title || 'Free, Secure, HD Calls'}
                   </h2>
-                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc audio-section-desc">
-                    Enjoy smooth audio and video calls to stay connected with friends anytime, anywhere.
+                  <p className="audio-section-desc">
+                    {sec1.desc || 'Crystal-clear calls for all connections, regardless of network.'}
                   </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right audio-section-right">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img audio-section-img-wrap">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/bg-video-call.6259fb3f.png" alt="Free Secure HD Calls Video Call" className="audio-section-img" />
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec1.image || '/imo_files/bg-video-call.6259fb3f.png'}
+                      alt={sec1.title || 'Free, Secure, HD Calls'}
+                      className="audio-section-img"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ===== SECTION 2: FREE INTERNATIONAL CALLS ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" id="global-call" className="feature-section global-call-section-wrap">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container global-call-section h-780">
+          {/* ===== SECTION 2: GLOBAL CALLS ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" id="global" className="feature-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container global-call-section-wrap global-call-section">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/icon-video-dark.229c7d5c.png" alt="videoIcon" />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">Audio &amp; Video</span>
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec2.badgeIcon || '/imo_files/icon-video-dark.229c7d5c.png'}
+                      alt="videoIcon"
+                      className="section-badge-icon"
+                    />
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec2.badgeText || 'Global Call'}</span>
                   </div>
-                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title"> Free International Calls </h2>
-                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc"> Make free international voice and video calls with friends and family, featuring clear and reliable quality. </p>
+                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
+                    {sec2.title || 'Free International Calls'}
+                  </h2>
+                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
+                    {sec2.desc || 'Connect with anyone, anywhere in the world, on any network with low cost or free.'}
+                  </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/global-call.a744bcae.png" alt="Free International Calls Phone Screen" />
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec2.image || '/imo_files/global-call.a744bcae.png'}
+                      alt={sec2.title || 'Free International Calls'}
+                      className="global-call-img"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ===== SECTION 3: PRIVATE SECTION ===== */}
+          {/* ===== SECTION 3: PRIVACY SECTION ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" id="private" className="feature-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container private-section">
+              <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
+                <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
+                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec3.badgeIcon || '/imo_files/icon-private.84088b7b.png'}
+                      alt="privateIcon"
+                      className="section-badge-icon"
+                    />
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec3.badgeText || 'Privacy'}</span>
+                  </div>
+                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
+                    {sec3.title || 'Private Call'}
+                  </h2>
+                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
+                    {sec3.desc || 'Enjoy completely private chats and calls with built-in end-to-end encryption.'}
+                  </p>
+                </div>
+                <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
+                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img">
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec3.image || '/imo_files/bg-private.2df28805.png'}
+                      alt={sec3.title || 'Private Call'}
+                      className="private-img"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ===== SECTION 4: SECURITY SECTION ===== */}
           <section data-v-56b2566a="" data-v-3d13c7c6="" id="secure" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container private-section h-823">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container secure-section">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/icon-private.84088b7b.png" alt="privateIcon" />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">Private</span>
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec4.badgeIcon || '/imo_files/icon-secure.42e65266.png'}
+                      alt="secureIcon"
+                      className="section-badge-icon"
+                    />
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec4.badgeText || 'Security'}</span>
                   </div>
-                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title"> Ultimate Privacy Protection </h2>
-                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc"> One-tap safeguard your privacy with End-to-End Encryption, Time Machine, and Disappearing Message. </p>
+                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
+                    {sec4.title || 'Secure Communication'}
+                  </h2>
+                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
+                    {sec4.desc || 'End-to-end encrypted messaging to keep all your personal messages confidential.'}
+                  </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/bg-private.2df28805.png" alt="Ultimate Privacy Protection" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ===== SECTION 4: SECURE SECTION ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container secure-section h-780">
-              <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
-                <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
-                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/icon-secure.42e65266.png" alt="secureIcon" />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">Secure</span>
-                  </div>
-                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title"> All-Round Account Security </h2>
-                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc"> Keep your account secure with 2-step verification, spam blocking, and more. </p>
-                </div>
-                <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
-                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/bg-secure.6c5e7e8b.png" alt="All-Round Account Security" />
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec4.image || '/imo_files/bg-secure.6c5e7e8b.png'}
+                      alt={sec4.title || 'Secure Communication'}
+                      className="secure-img"
+                    />
                   </div>
                 </div>
               </div>
@@ -303,19 +445,35 @@ export default function HomeView() {
 
           {/* ===== SECTION 5: TRANSLATE SECTION ===== */}
           <section data-v-56b2566a="" data-v-3d13c7c6="" id="translate" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container translate-section h-717">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container translate-section">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/icon-translate.5479bb7f.png" alt="translateIcon" />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">Translation</span>
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec5.badgeIcon || '/imo_files/icon-translate.5479bb7f.png'}
+                      alt="translateIcon"
+                      className="section-badge-icon"
+                    />
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec5.badgeText || 'Translation'}</span>
                   </div>
-                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title"> Instant Message Translation </h2>
-                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc"> Translate messages effortlessly for seamless cross-language conversations. </p>
+                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
+                    {sec5.title || 'Instant Message Translation'}
+                  </h2>
+                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
+                    {sec5.desc || 'Translate messages effortlessly for seamless cross-language conversations.'}
+                  </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="right-img">
-                    <img data-v-56b2566a="" data-v-3d13c7c6="" src="/imo_files/bg-translate.9257ccaa.png" alt="Instant Message Translation" />
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      src={sec5.image || '/imo_files/bg-translate.9257ccaa.png'}
+                      alt={sec5.title || 'Instant Message Translation'}
+                      className="translate-img"
+                    />
                   </div>
                 </div>
               </div>
@@ -332,17 +490,23 @@ export default function HomeView() {
             <div data-v-1add94aa="" className="app-info">
               <div data-v-1add94aa="" className="flex a-center">
                 <div data-v-1add94aa="" className="icon-logo">
-                  <img data-v-1add94aa="" width="100%" height="100%" alt="logo" src="/imo_files/logo.7a3ea355.png" />
+                  <img
+                    data-v-1add94aa=""
+                    width="100%"
+                    height="100%"
+                    alt={site.name || 'logo'}
+                    src={site.logoUrl || '/imo_files/logo.7a3ea355.png'}
+                  />
                 </div>
                 <div data-v-1add94aa="" className="ml-32 flex-1">
-                  <div data-v-1add94aa="" className="name"> imo </div>
-                  <div data-v-1add94aa="" className="desc"> HD video call for free </div>
+                  <div data-v-1add94aa="" className="name">{site.name || 'imo'}</div>
+                  <div data-v-1add94aa="" className="desc">{site.description || 'HD video call for free'}</div>
                 </div>
               </div>
               <div data-v-1add94aa="" className="mt-42 download-wrapper flex">
                 <DownloadButton className="download flex flex-center" style={{ cursor: 'pointer' }}>
                   <DownloadSVG />
-                  <div data-v-1add94aa="" className="download-text"> Download </div>
+                  <div data-v-1add94aa="" className="download-text">{hero.downloadBtnText || 'Download'}</div>
                 </DownloadButton>
               </div>
             </div>
@@ -358,8 +522,20 @@ export default function HomeView() {
               <div data-v-1add94aa="" className="block flex-1">
                 <div data-v-1add94aa="" className="block__title"> Who We Are </div>
                 <div data-v-1add94aa="" className="block__actions mt-24">
-                  <div data-v-1add94aa=""><span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> About Us </span></div>
-                  <div data-v-1add94aa="" className="mt-32"><span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> Policy </span></div>
+                  <div data-v-1add94aa="">
+                    {links.aboutUsUrl ? (
+                      <a data-v-1add94aa="" href={links.aboutUsUrl} target="_blank" rel="noopener noreferrer" className="action"> About Us </a>
+                    ) : (
+                      <span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> About Us </span>
+                    )}
+                  </div>
+                  <div data-v-1add94aa="" className="mt-32">
+                    {links.policyUrl ? (
+                      <a data-v-1add94aa="" href={links.policyUrl} target="_blank" rel="noopener noreferrer" className="action"> Policy </a>
+                    ) : (
+                      <span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> Policy </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div data-v-1add94aa="" className="block flex-1">
@@ -368,7 +544,13 @@ export default function HomeView() {
                   <div data-v-1add94aa=""><div data-v-1add94aa="" className="action"> Android </div></div>
                   <div data-v-1add94aa="" className="mt-32"><div data-v-1add94aa="" className="action"> iPhone </div></div>
                   <div data-v-1add94aa="" className="mt-32"><div data-v-1add94aa="" className="action"> Mac/PC </div></div>
-                  <div data-v-1add94aa="" className="mt-32"><span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> imo Web </span></div>
+                  <div data-v-1add94aa="" className="mt-32">
+                    {links.imoWebUrl ? (
+                      <a data-v-1add94aa="" href={links.imoWebUrl} target="_blank" rel="noopener noreferrer" className="action"> imo Web </a>
+                    ) : (
+                      <span data-v-1add94aa="" className="action" style={{ cursor: 'default' }}> imo Web </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div data-v-1add94aa="" className="block flex-1">
@@ -380,7 +562,11 @@ export default function HomeView() {
                   <div data-v-1add94aa="" className="mt-32">
                     <div data-v-1add94aa="" className="media">
                       <div data-v-1add94aa="" className="media-icon phone"></div>
-                      <div data-v-1add94aa="" className="media-icon facebook" style={{ cursor: 'default' }}></div>
+                      {links.facebookUrl ? (
+                        <a data-v-1add94aa="" href={links.facebookUrl} target="_blank" rel="noopener noreferrer nofollow" className="media-icon facebook"></a>
+                      ) : (
+                        <div data-v-1add94aa="" className="media-icon facebook" style={{ cursor: 'default' }}></div>
+                      )}
                     </div>
                   </div>
                 </div>

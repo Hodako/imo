@@ -21,5 +21,5 @@ export default async function AdminPage({ searchParams }) {
     return <AdminDashboard initialConfig={config} isQueryAuth={Boolean(isAuthedByQuery)} />;
   }
 
-  return <AdminLoginForm defaultPassword={config.adminPassword || 'admin123'} />;
+  return <AdminLoginForm />;
 }

@@ -2,6 +2,7 @@
   "name": "imo-app",
   "version": "0.1.0",
   "private": true,
+  "adminPath": "demon/admin",
   "scripts": {
     "dev": "next dev -p 80",
     "build": "next build",

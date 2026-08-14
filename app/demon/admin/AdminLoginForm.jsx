@@ -4,14 +4,14 @@ import { useState } from 'react';
 import styles from './admin.module.css';
 import { loginAdmin } from './actions';
 
-export default function AdminLoginForm({ defaultPassword = 'admin123' }) {
+export default function AdminLoginForm() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function handleLoginSubmit(passToTry) {
-    const pw = (passToTry !== undefined ? passToTry : password).trim();
+  async function handleLoginSubmit() {
+    const pw = password.trim();
     if (!pw) {
       setError('Please enter the admin password.');
       return;
@@ -21,43 +21,24 @@ export default function AdminLoginForm({ defaultPassword = 'admin123' }) {
     setError('');
 
     try {
-      // 1. Try Server Action
+      // 1. Server Action verification
       const res = await loginAdmin(null, pw);
       if (res && res.success) {
-        // Set client cookie too for redundancy
         document.cookie = `imo_admin_session=true; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
         window.location.reload();
         return;
       }
 
-      // 2. If Server Action returned error
       if (res && res.error) {
-        // Check if matching default
-        if (pw === defaultPassword) {
-          document.cookie = `imo_admin_session=true; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
-          window.location.reload();
-          return;
-        }
         setError(res.error);
         setLoading(false);
         return;
       }
     } catch {
-      // 3. Fallback on network/fetch issue on phone
-      if (pw === defaultPassword) {
-        document.cookie = `imo_admin_session=true; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
-        window.location.reload();
-        return;
-      }
-      setError('Login failed. Please try again or tap the default button below.');
+      setError('Authentication failed. Please check your password and try again.');
     } finally {
       setLoading(false);
     }
-  }
-
-  function handleQuickFill() {
-    setPassword(defaultPassword);
-    handleLoginSubmit(defaultPassword);
   }
 
   return (
@@ -69,7 +50,6 @@ export default function AdminLoginForm({ defaultPassword = 'admin123' }) {
         <h1 className={styles.loginTitle}>Admin Control</h1>
         <p className={styles.loginSub}>Enter password to access APK settings</p>
 
-        {/* Native form with server action */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -112,20 +92,6 @@ export default function AdminLoginForm({ defaultPassword = 'admin123' }) {
           >
             {loading ? 'Verifying…' : 'Login to Admin Panel'}
           </button>
-
-          <div className={styles.quickFillWrap}>
-            <p className={styles.hintText}>
-              Default password: <code>{defaultPassword}</code>
-            </p>
-            <button
-              type="button"
-              className={styles.quickFillBtn}
-              onClick={handleQuickFill}
-              id="quick-fill-login-btn"
-            >
-              ⚡ Fill &amp; Login with default password
-            </button>
-          </div>
         </form>
       </div>
     </div>
