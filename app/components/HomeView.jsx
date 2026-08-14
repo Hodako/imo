@@ -7,7 +7,6 @@ export default function HomeView({ initialConfig = {} }) {
   const [config, setConfig] = useState(initialConfig);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Sync client state with fresh config from API on mount
   useEffect(() => {
     fetch('/api/site-config')
       .then((res) => res.json())
@@ -30,7 +29,6 @@ export default function HomeView({ initialConfig = {} }) {
   const sec4 = sections.section4 || {};
   const sec5 = sections.section5 || {};
 
-  // Parse hero title with line breaks
   const heroTitleText = hero.title || 'Free, Simple,\nand Secure';
   const heroTitleLines = heroTitleText.split('\n');
 
@@ -189,17 +187,25 @@ export default function HomeView({ initialConfig = {} }) {
             </div>
             <ul className="mobile-nav-links">
               <li><a href={links.homeUrl || '/'} onClick={() => setMobileMenuOpen(false)}>🏠 Home</a></li>
-              {links.blogUrl && (
+              {links.blogUrl ? (
                 <li><a href={links.blogUrl} target="_blank" rel="noopener noreferrer">📝 Blog</a></li>
+              ) : (
+                <li><a href="https://imo.im/blog" target="_blank" rel="noopener noreferrer">📝 Blog</a></li>
               )}
-              {links.helpCenterUrl && (
+              {links.helpCenterUrl ? (
                 <li><a href={links.helpCenterUrl} target="_blank" rel="noopener noreferrer">❓ Help Center</a></li>
+              ) : (
+                <li><a href="https://imo.im/faq" target="_blank" rel="noopener noreferrer">❓ Help Center</a></li>
               )}
-              {links.appsUrl && (
+              {links.appsUrl ? (
                 <li><a href={links.appsUrl} target="_blank" rel="noopener noreferrer">📱 Apps</a></li>
+              ) : (
+                <li><a href="https://imo.im/log" target="_blank" rel="noopener noreferrer">📱 Apps</a></li>
               )}
-              {links.imoWebUrl && (
+              {links.imoWebUrl ? (
                 <li><a href={links.imoWebUrl} target="_blank" rel="noopener noreferrer">🌐 imo Web</a></li>
+              ) : (
+                <li><a href="https://web.imo.im/?source=official-header" target="_blank" rel="noopener noreferrer">🌐 imo Web</a></li>
               )}
             </ul>
             <div className="mobile-nav-cta">
@@ -216,7 +222,7 @@ export default function HomeView({ initialConfig = {} }) {
       <div data-v-3d13c7c6="" className="content max-width">
         <div data-v-56b2566a="" data-v-3d13c7c6="" className="container">
 
-          {/* ===== HERO SECTION ===== */}
+          {/* ===== HERO SECTION (Matches Screenshot) ===== */}
           <div data-v-56b2566a="" data-v-3d13c7c6="" className="top hero-section">
             <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex hero-flex">
               
@@ -234,7 +240,7 @@ export default function HomeView({ initialConfig = {} }) {
                   {hero.subtitle || 'Connect with your loved ones through calls and messages.'}
                 </p>
 
-                {/* Desktop Primary Download Button */}
+                {/* Desktop Primary Download Button (Matches Screenshot) */}
                 <div className="desktop-hero-cta-wrap desktop-only-cta">
                   <DownloadButton className="desktop-hero-download-btn">
                     <span>{hero.downloadBtnText || 'Download'}</span>
@@ -246,17 +252,17 @@ export default function HomeView({ initialConfig = {} }) {
                   </DownloadButton>
                 </div>
 
-                {/* Desktop Platform Icons Row + More Versions Link */}
+                {/* Desktop Platform Icons Row (Chrome, Windows, Mac, Android, More Versions >) */}
                 <div className="desktop-platforms-row desktop-only-cta">
                   <div className="desktop-platform-icons">
-                    <span className="desktop-platform-icon-wrap" title="Browser">
+                    <span className="desktop-platform-icon-wrap" title="Chrome / Browser">
                       <img src="/imo_files/icon-mac-blue.e9c0aaa1.png" alt="Browser" className="plat-icon" />
                     </span>
                     <span className="desktop-platform-icon-wrap" title="Windows">
                       <img src="/imo_files/icon-win-blue.3a090cce.png" alt="Windows" className="plat-icon" />
                     </span>
-                    <span className="desktop-platform-icon-wrap" title="Apple">
-                      <img src="/imo_files/icon-ios-blue.9a8ec9e9.png" alt="Apple" className="plat-icon" />
+                    <span className="desktop-platform-icon-wrap" title="Apple / Mac / iOS">
+                      <img src="/imo_files/icon-ios-blue.9a8ec9e9.png" alt="iOS/Mac" className="plat-icon" />
                     </span>
                     <span className="desktop-platform-icon-wrap" title="Android">
                       <img src="/imo_files/icon-android-blue.992186a1.png" alt="Android" className="plat-icon" />
@@ -268,53 +274,56 @@ export default function HomeView({ initialConfig = {} }) {
                 </div>
               </div>
 
-              {/* Right Column: Hero Collage Artwork Image */}
+              {/* Right Column: Hero Artwork Collage */}
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="top-right hero-image-col">
-                <div data-v-56b2566a="" className="img-wrapper desktop-hero-img-wrap">
-                  <img
-                    data-v-56b2566a=""
-                    src={hero.artworkImage || '/imo_files/bg-home-first-image.842b02fa.png'}
-                    alt="imo connected collage"
-                    className="hero-artwork-img"
-                  />
+                <div data-v-56b2566a="" data-v-3d13c7c6="" className="img-wrapper desktop-hero-img-wrap">
+                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="fixed-topbg">
+                    <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
+                      alt="imo calls and messages"
+                      className="top-right__bg hero-artwork-img"
+                      src={hero.artworkImage || '/imo_files/bg-home-first-image.842b02fa.png'}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile-only Download CTA (Positioned right below hero image on mobile) */}
+              <div className="mobile-hero-cta">
+                <DownloadButton className="mobile-direct-download-btn" style={{ cursor: 'pointer' }}>
+                  <AndroidRobotSVG />
+                  <span className="btn-text">{hero.downloadBtnText || 'Download Now'}</span>
+                </DownloadButton>
+                <div className="mobile-more-versions">
+                  <DownloadButton className="mobile-more-versions-link">
+                    <span>{hero.moreVersionsText || 'More Versions >'}</span>
+                  </DownloadButton>
                 </div>
               </div>
 
             </div>
-
-            {/* Mobile Direct Download Button */}
-            <div className="mobile-hero-cta">
-              <DownloadButton className="mobile-direct-download-btn">
-                <AndroidRobotSVG />
-                <span className="btn-text">{hero.downloadBtnText || 'Download Now'}</span>
-              </DownloadButton>
-              <div className="mobile-more-versions">
-                <DownloadButton className="mobile-more-versions-link">
-                  <span>{hero.moreVersionsText || 'More Versions >'}</span>
-                </DownloadButton>
-              </div>
-            </div>
-
           </div>
 
-          {/* ===== SECTION 1: AUDIO & VIDEO / HD CALLS ===== */}
+          {/* ===== SECTION 1: FREE, SECURE, HD CALLS ===== */}
           <section data-v-56b2566a="" data-v-3d13c7c6="" id="audio" className="feature-section">
             <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container audio-section vedio-section">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
-                  <div className="audio-section-badge">
+                  <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header audio-section-badge">
                     <img
+                      data-v-56b2566a=""
+                      data-v-3d13c7c6=""
                       src={sec1.badgeIcon || '/imo_files/icon-video-light.d5af9c91.png'}
-                      alt="videoIcon"
-                      className="section-badge-icon"
+                      alt="vedioIcon"
                     />
-                    <span>{sec1.badgeText || 'Audio & Video'}</span>
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec1.badgeText || 'Audio & Video'}</span>
                   </div>
-                  <h2 className="audio-section-title">
+                  <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title audio-section-title">
                     {sec1.title || 'Free, Secure, HD Calls'}
                   </h2>
-                  <p className="audio-section-desc">
-                    {sec1.desc || 'Crystal-clear calls for all connections, regardless of network.'}
+                  <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc audio-section-desc">
+                    {sec1.desc || 'Enjoy smooth audio and video calls to stay connected with friends anytime, anywhere.'}
                   </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right audio-section-right">
@@ -323,7 +332,7 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-56b2566a=""
                       data-v-3d13c7c6=""
                       src={sec1.image || '/imo_files/bg-video-call.6259fb3f.png'}
-                      alt={sec1.title || 'Free, Secure, HD Calls'}
+                      alt={sec1.title || 'Free Secure HD Calls Video Call'}
                       className="audio-section-img"
                     />
                   </div>
@@ -332,9 +341,9 @@ export default function HomeView({ initialConfig = {} }) {
             </div>
           </section>
 
-          {/* ===== SECTION 2: GLOBAL CALLS ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" id="global" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container global-call-section-wrap global-call-section">
+          {/* ===== SECTION 2: FREE INTERNATIONAL CALLS ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" id="global-call" className="feature-section global-call-section-wrap">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container global-call-section h-780">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
@@ -343,7 +352,6 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-3d13c7c6=""
                       src={sec2.badgeIcon || '/imo_files/icon-video-dark.229c7d5c.png'}
                       alt="videoIcon"
-                      className="section-badge-icon"
                     />
                     <span data-v-56b2566a="" data-v-3d13c7c6="">{sec2.badgeText || 'Global Call'}</span>
                   </div>
@@ -351,7 +359,7 @@ export default function HomeView({ initialConfig = {} }) {
                     {sec2.title || 'Free International Calls'}
                   </h2>
                   <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
-                    {sec2.desc || 'Connect with anyone, anywhere in the world, on any network with low cost or free.'}
+                    {sec2.desc || 'Make free international voice and video calls with friends and family, featuring clear and reliable quality.'}
                   </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
@@ -360,8 +368,7 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-56b2566a=""
                       data-v-3d13c7c6=""
                       src={sec2.image || '/imo_files/global-call.a744bcae.png'}
-                      alt={sec2.title || 'Free International Calls'}
-                      className="global-call-img"
+                      alt={sec2.title || 'Free International Calls Phone Screen'}
                     />
                   </div>
                 </div>
@@ -369,9 +376,9 @@ export default function HomeView({ initialConfig = {} }) {
             </div>
           </section>
 
-          {/* ===== SECTION 3: PRIVACY SECTION ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" id="private" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container private-section">
+          {/* ===== SECTION 3: PRIVATE SECTION ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" id="secure" className="feature-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container private-section h-823">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
@@ -380,15 +387,14 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-3d13c7c6=""
                       src={sec3.badgeIcon || '/imo_files/icon-private.84088b7b.png'}
                       alt="privateIcon"
-                      className="section-badge-icon"
                     />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec3.badgeText || 'Privacy'}</span>
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec3.badgeText || 'Private'}</span>
                   </div>
                   <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
-                    {sec3.title || 'Private Call'}
+                    {sec3.title || 'Ultimate Privacy Protection'}
                   </h2>
                   <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
-                    {sec3.desc || 'Enjoy completely private chats and calls with built-in end-to-end encryption.'}
+                    {sec3.desc || 'One-tap safeguard your privacy with End-to-End Encryption, Time Machine, and Disappearing Message.'}
                   </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
@@ -397,8 +403,7 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-56b2566a=""
                       data-v-3d13c7c6=""
                       src={sec3.image || '/imo_files/bg-private.2df28805.png'}
-                      alt={sec3.title || 'Private Call'}
-                      className="private-img"
+                      alt={sec3.title || 'Ultimate Privacy Protection'}
                     />
                   </div>
                 </div>
@@ -406,9 +411,9 @@ export default function HomeView({ initialConfig = {} }) {
             </div>
           </section>
 
-          {/* ===== SECTION 4: SECURITY SECTION ===== */}
-          <section data-v-56b2566a="" data-v-3d13c7c6="" id="secure" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container secure-section">
+          {/* ===== SECTION 4: SECURE SECTION ===== */}
+          <section data-v-56b2566a="" data-v-3d13c7c6="" className="feature-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container secure-section h-780">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
@@ -417,15 +422,14 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-3d13c7c6=""
                       src={sec4.badgeIcon || '/imo_files/icon-secure.42e65266.png'}
                       alt="secureIcon"
-                      className="section-badge-icon"
                     />
-                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec4.badgeText || 'Security'}</span>
+                    <span data-v-56b2566a="" data-v-3d13c7c6="">{sec4.badgeText || 'Secure'}</span>
                   </div>
                   <h2 data-v-56b2566a="" data-v-3d13c7c6="" className="left__title">
-                    {sec4.title || 'Secure Communication'}
+                    {sec4.title || 'All-Round Account Security'}
                   </h2>
                   <p data-v-56b2566a="" data-v-3d13c7c6="" className="left__desc">
-                    {sec4.desc || 'End-to-end encrypted messaging to keep all your personal messages confidential.'}
+                    {sec4.desc || 'Keep your account secure with 2-step verification, spam blocking, and more.'}
                   </p>
                 </div>
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="right">
@@ -434,8 +438,7 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-56b2566a=""
                       data-v-3d13c7c6=""
                       src={sec4.image || '/imo_files/bg-secure.6c5e7e8b.png'}
-                      alt={sec4.title || 'Secure Communication'}
-                      className="secure-img"
+                      alt={sec4.title || 'All-Round Account Security'}
                     />
                   </div>
                 </div>
@@ -445,7 +448,7 @@ export default function HomeView({ initialConfig = {} }) {
 
           {/* ===== SECTION 5: TRANSLATE SECTION ===== */}
           <section data-v-56b2566a="" data-v-3d13c7c6="" id="translate" className="feature-section">
-            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container translate-section">
+            <div data-v-56b2566a="" data-v-3d13c7c6="" className="section-container translate-section h-717">
               <div data-v-56b2566a="" data-v-3d13c7c6="" className="max-width flex">
                 <div data-v-56b2566a="" data-v-3d13c7c6="" className="left">
                   <div data-v-56b2566a="" data-v-3d13c7c6="" className="left__header">
@@ -454,7 +457,6 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-3d13c7c6=""
                       src={sec5.badgeIcon || '/imo_files/icon-translate.5479bb7f.png'}
                       alt="translateIcon"
-                      className="section-badge-icon"
                     />
                     <span data-v-56b2566a="" data-v-3d13c7c6="">{sec5.badgeText || 'Translation'}</span>
                   </div>
@@ -472,7 +474,6 @@ export default function HomeView({ initialConfig = {} }) {
                       data-v-3d13c7c6=""
                       src={sec5.image || '/imo_files/bg-translate.9257ccaa.png'}
                       alt={sec5.title || 'Instant Message Translation'}
-                      className="translate-img"
                     />
                   </div>
                 </div>

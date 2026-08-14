@@ -2,7 +2,7 @@
   "adminPassword": "admin123",
   "site": {
     "title": "imo - Free Video Calls and Chat",
-    "name": "imo",
+    "name": "Whatsapp",
     "description": "imo is a free, simple, and secure video calling and instant messaging app.",
     "logoUrl": "/imo_files/imo.30ad61b6.png",
     "faviconUrl": "/imo_files/imo.30ad61b6.png"
@@ -69,5 +69,6 @@
   },
   "apk": {
     "apkUrl": ""
-  }
+  },
+  "apkUrl": ""
 }
