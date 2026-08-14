@@ -1,30 +1,59 @@
 'use client';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-export default function DownloadButton({ className, children, style }) {
-  const handleDownload = useCallback(async () => {
+export default function DownloadButton({ className, children, style, filename = 'imo.apk' }) {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = useCallback(async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+
     try {
+      setDownloading(true);
       const res = await fetch('/api/apk-config');
       const data = await res.json();
-      if (data.apkUrl && data.apkUrl.trim() !== '') {
+
+      const apkUrl = data.apkUrl || '';
+
+      if (apkUrl && apkUrl.trim() !== '') {
+        // Trigger download
+        const fullUrl = apkUrl.startsWith('http://') || apkUrl.startsWith('https://')
+          ? apkUrl
+          : `${window.location.origin}${apkUrl.startsWith('/') ? '' : '/'}${apkUrl}`;
+
         const link = document.createElement('a');
-        link.href = data.apkUrl;
-        link.download = 'imo.apk';
+        link.href = fullUrl;
+        link.setAttribute('download', filename);
+        link.setAttribute('target', '_self');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Fallback for some mobile WebViews
+        setTimeout(() => {
+          if (!document.hidden) {
+            window.location.href = fullUrl;
+          }
+        }, 500);
       } else {
-        showToast('Download not configured yet. Please contact admin.');
+        showToast('⚠️ APK download not configured yet. Set APK URL in Admin Panel.');
       }
     } catch {
-      showToast('Failed to fetch download info. Please try again.');
+      showToast('⚠️ Failed to fetch download info. Please try again.');
+    } finally {
+      setTimeout(() => setDownloading(false), 1000);
     }
-  }, []);
+  }, [filename]);
 
   return (
-    <div className={className} style={style} onClick={handleDownload} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && handleDownload()}
-      title="Download imo APK"
+    <div
+      className={className}
+      style={style}
+      onClick={handleDownload}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleDownload(e)}
+      title="Download APK"
     >
       {children}
     </div>
@@ -56,5 +85,5 @@ function showToast(msg) {
   setTimeout(() => {
     toast.style.opacity = '0';
     setTimeout(() => toast.remove(), 400);
-  }, 3000);
+  }, 3200);
 }
