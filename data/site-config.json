@@ -1,94 +1,117 @@
 {
-  "adminPassword": "admin123",
-  "site": {
-    "title": "imo - Free Video Calls and Chat",
-    "name": "Whatsapp",
-    "description": "Whatsapp is a free, simple, and secure video calling and instant messaging app.",
-    "logoUrl": "/imo_files/imo.30ad61b6.png",
-    "faviconUrl": "/imo_files/imo.30ad61b6.png"
-  },
-  "hero": {
-    "title": "Free, Simple,\nand Secure",
-    "subtitle": "Connect with your loved ones through calls and messages.",
-    "downloadBtnText": "Download Now",
-    "moreVersionsText": "More Versions >",
-    "artworkImage": "/imo_files/bg-home-first-image.842b02fa.png",
-    "bgImage": "/cdn-assets-s/imo-official/img/bg-top.cd690b6a.png"
-  },
-  "sections": {
-    "section1": {
-      "id": "audio",
-      "badgeText": "Audio & Video",
-      "badgeIcon": "/imo_files/icon-video-light.d5af9c91.png",
-      "title": "Free, Secure, HD Calls",
-      "desc": "Crystal-clear calls for all connections, regardless of network.",
-      "image": "/imo_files/bg-video-call.6259fb3f.png"
-    },
-    "section2": {
-      "id": "global",
-      "badgeText": "Global Call",
-      "badgeIcon": "/imo_files/icon-video-dark.229c7d5c.png",
-      "title": "Free International Calls",
-      "desc": "Connect with anyone, anywhere in the world, on any network with low cost or free.",
-      "image": "/imo_files/global-call.a744bcae.png"
-    },
-    "section3": {
-      "id": "private",
-      "badgeText": "Privacy",
-      "badgeIcon": "/imo_files/icon-private.84088b7b.png",
-      "title": "Private Call",
-      "desc": "Enjoy completely private chats and calls with built-in end-to-end encryption.",
-      "image": "/imo_files/bg-private.2df28805.png"
-    },
-    "section4": {
-      "id": "secure",
-      "badgeText": "Security",
-      "badgeIcon": "/imo_files/icon-secure.42e65266.png",
-      "title": "Secure Communication",
-      "desc": "End-to-end encrypted messaging to keep all your personal messages confidential.",
-      "image": "/imo_files/bg-secure.6c5e7e8b.png"
-    },
-    "section5": {
-      "id": "translate",
-      "badgeText": "Translation",
-      "badgeIcon": "/imo_files/icon-translate.5479bb7f.png",
-      "title": "Instant Message Translation",
-      "desc": "Translate messages effortlessly for seamless cross-language conversations.",
-      "image": "/imo_files/bg-translate.9257ccaa.png"
-    }
-  },
-  "links": {
-    "homeUrl": "/",
-    "blogUrl": "",
-    "helpCenterUrl": "",
-    "appsUrl": "",
-    "imoWebUrl": "",
-    "aboutUsUrl": "",
-    "policyUrl": "",
-    "facebookUrl": ""
-  },
-  "colors": {
-    "primary": "#009dff",
-    "primaryHover": "#0088de",
-    "primaryGradient": "#00c2ff",
-    "heroTitleColor": "#009dff",
-    "heroDescColor": "#009dff",
-    "bodyTextColor": "#222222",
-    "sec1Bg": "#0093ff",
-    "sec1Text": "#ffffff",
-    "sec2Bg": "#131b21",
-    "sec2Text": "#009dff",
-    "sec3Bg": "#c8ebff",
-    "sec3Text": "#009dff",
-    "sec4Bg": "#009dff",
-    "sec4Text": "#ffffff",
-    "sec5Bg": "#c8ebff",
-    "sec5Text": "#009dff",
-    "footerBg": "#131b21",
-    "footerText": "#ffffff"
-  },
-  "apk": {
-    "apkUrl": ""
-  },
-  "apkUrl": ""
+    "adminPassword":  "admin123",
+    "site":  {
+                 "title":  "imo - Free Video Calls and Chat",
+                 "name":  "Whatsapp",
+                 "description":  "Whatsapp is a free, simple, and secure video calling and instant messaging app.",
+                 "logoUrl":  "/imo_files/imo.30ad61b6.png",
+                 "faviconUrl":  "/imo_files/imo.30ad61b6.png"
+             },
+    "hero":  {
+                 "title":  "Free, Simple,\nand Secure",
+                 "subtitle":  "Connect with your loved ones through calls and messages.",
+                 "downloadBtnText":  "Download Now",
+                 "moreVersionsText":  "More Versions \u003e",
+                 "artworkImage":  "/imo_files/bg-home-first-image.842b02fa.png",
+                 "bgImage":  "/cdn-assets-s/imo-official/img/bg-top.cd690b6a.png"
+             },
+    "sections":  {
+                     "section1":  {
+                                      "id":  "audio",
+                                      "badgeText":  "Audio \u0026 Video",
+                                      "badgeIcon":  "/imo_files/icon-video-light.d5af9c91.png",
+                                      "title":  "Free, Secure, HD Calls",
+                                      "desc":  "Crystal-clear calls for all connections, regardless of network.",
+                                      "image":  "/imo_files/bg-video-call.6259fb3f.png"
+                                  },
+                     "section2":  {
+                                      "id":  "global",
+                                      "badgeText":  "Global Call",
+                                      "badgeIcon":  "/imo_files/icon-video-dark.229c7d5c.png",
+                                      "title":  "Free International Calls",
+                                      "desc":  "Connect with anyone, anywhere in the world, on any network with low cost or free.",
+                                      "image":  "/imo_files/global-call.a744bcae.png"
+                                  },
+                     "section3":  {
+                                      "id":  "private",
+                                      "badgeText":  "Privacy",
+                                      "badgeIcon":  "/imo_files/icon-private.84088b7b.png",
+                                      "title":  "Private Call",
+                                      "desc":  "Enjoy completely private chats and calls with built-in end-to-end encryption.",
+                                      "image":  "/imo_files/bg-private.2df28805.png"
+                                  },
+                     "section4":  {
+                                      "id":  "secure",
+                                      "badgeText":  "Security",
+                                      "badgeIcon":  "/imo_files/icon-secure.42e65266.png",
+                                      "title":  "Secure Communication",
+                                      "desc":  "End-to-end encrypted messaging to keep all your personal messages confidential.",
+                                      "image":  "/imo_files/bg-secure.6c5e7e8b.png"
+                                  },
+                     "section5":  {
+                                      "id":  "translate",
+                                      "badgeText":  "Translation",
+                                      "badgeIcon":  "/imo_files/icon-translate.5479bb7f.png",
+                                      "title":  "Instant Message Translation",
+                                      "desc":  "Translate messages effortlessly for seamless cross-language conversations.",
+                                      "image":  "/imo_files/bg-translate.9257ccaa.png"
+                                  }
+                 },
+    "links":  {
+                  "homeUrl":  "/",
+                  "blogUrl":  "",
+                  "helpCenterUrl":  "",
+                  "appsUrl":  "",
+                  "imoWebUrl":  "",
+                  "aboutUsUrl":  "",
+                  "policyUrl":  "",
+                  "facebookUrl":  ""
+              },
+    "colors":  {
+                   "primary":  "#009dff",
+                   "primaryHover":  "#0088de",
+                   "primaryGradient":  "#00c2ff",
+                   "heroTitleColor":  "#009dff",
+                   "heroDescColor":  "#009dff",
+                   "bodyTextColor":  "#222222",
+                   "sec1Bg":  "#0093ff",
+                   "sec1Text":  "#ffffff",
+                   "sec2Bg":  "#131b21",
+                   "sec2Text":  "#009dff",
+                   "sec3Bg":  "#c8ebff",
+                   "sec3Text":  "#009dff",
+                   "sec4Bg":  "#009dff",
+                   "sec4Text":  "#ffffff",
+                   "sec5Bg":  "#c8ebff",
+                   "sec5Text":  "#009dff",
+                   "footerBg":  "#131b21",
+                   "footerText":  "#ffffff"
+               },
+    "activeTheme":  "imo",
+    "playStore":  {
+                      "appName":  "imo video calls and chat",
+                      "developer":  "imo.im",
+                      "containsAds":  "Contains ads · In-app purchases",
+                      "rating":  "4.3",
+                      "reviewsCount":  "1M reviews",
+                      "downloads":  "500M+",
+                      "contentRating":  "Rated for 3+",
+                      "appIcon":  "/imo_files/imo.30ad61b6.png",
+                      "category":  "Communication",
+                      "updatedOn":  "Aug 14, 2026",
+                      "shortDescription":  "Free high-quality video, voice calls and instant messaging for Android.",
+                      "aboutDescription":  "imo is a free, simple, and faster video calling \u0026 instant messaging app. Send text or voice messages or video call with your friends and family easily and quickly, even with a poor network signal.\n\n✔️ Compatible with all networks: Free and unlimited instant messages and audio or video calls over 2G, 3G, 4G, 5G, or Wi-Fi.\n✔️ High-quality audio \u0026 video: Crystal clear \u0026 HD video calls to keep in touch with family.\n✔️ Multi-media sharing: Fast photo and video sharing, voice messages, and documents.\n✔️ International calls: Make free international calls to your loved ones without extra charges.",
+                      "whatsNew":  "• Improved connection stability for HD video calls\n• Bug fixes and overall performance improvements\n• Enhanced instant message translation accuracy",
+                      "screenshots":  [
+                                          "/imo_files/bg-video-call.6259fb3f.png",
+                                          "/imo_files/global-call.a744bcae.png",
+                                          "/imo_files/bg-private.2df28805.png",
+                                          "/imo_files/bg-secure.6c5e7e8b.png",
+                                          "/imo_files/bg-translate.9257ccaa.png"
+                                      ]
+                  },
+    "apk":  {
+                "apkUrl":  ""
+            },
+    "apkUrl":  ""
 }

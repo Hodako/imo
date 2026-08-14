@@ -451,6 +451,134 @@
   flex-shrink: 0;
 }
 
+/* ===== THEME SWITCHER CARDS ===== */
+.themeSelectorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.themeOptionCard {
+  background: #161b22;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.themeOptionCard:hover {
+  border-color: rgba(0, 157, 255, 0.4);
+  background: #1c2129;
+}
+
+.themeOptionCardActive {
+  border-color: #009dff !important;
+  background: rgba(0, 157, 255, 0.08) !important;
+  box-shadow: 0 0 0 1px #009dff, 0 4px 16px rgba(0, 157, 255, 0.15);
+}
+
+.themeCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.themeTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e6edf3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.themeBadgeActive {
+  background: #009dff;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.themeBadgeInactive {
+  background: rgba(255, 255, 255, 0.08);
+  color: #8b949e;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.themeCardDesc {
+  font-size: 13px;
+  color: #8b949e;
+  line-height: 1.4;
+}
+
+/* ===== SCREENSHOTS MANAGER GRID ===== */
+.screenshotsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.screenshotCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.screenshotPreviewWrap {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  background: #0d1117;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screenshotPreview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.screenshotActions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btnRemoveScreenshot {
+  padding: 6px 10px;
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+  border: 1px solid rgba(248, 81, 73, 0.3);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnRemoveScreenshot:hover {
+  background: rgba(248, 81, 73, 0.3);
+}
+
 /* URL Status Chip & Controls */
 .currentUrlBox {
   width: 100%;

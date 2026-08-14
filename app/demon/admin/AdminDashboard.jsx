@@ -134,7 +134,7 @@ const THEME_PRESETS = [
 ];
 
 export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false }) {
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('theme');
   const [config, setConfig] = useState(initialConfig);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState(null); // { type: 'success'|'error', msg }
@@ -167,6 +167,68 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
         [key]: value,
       },
     }));
+  }
+
+  // Active theme switcher
+  function switchTheme(themeKey) {
+    setConfig((prev) => ({
+      ...prev,
+      activeTheme: themeKey,
+    }));
+  }
+
+  // PlayStore field updater
+  function updatePlayStoreField(field, value) {
+    setConfig((prev) => ({
+      ...prev,
+      playStore: {
+        ...(prev.playStore || {}),
+        [field]: value,
+      },
+    }));
+  }
+
+  // Screenshot helper
+  function updateScreenshot(idx, newUrl) {
+    setConfig((prev) => {
+      const current = [...(prev.playStore?.screenshots || [])];
+      current[idx] = newUrl;
+      return {
+        ...prev,
+        playStore: {
+          ...(prev.playStore || {}),
+          screenshots: current,
+        },
+      };
+    });
+  }
+
+  function addScreenshot(url = '/imo_files/bg-video-call.6259fb3f.png') {
+    setConfig((prev) => {
+      const current = [...(prev.playStore?.screenshots || [])];
+      current.push(url);
+      return {
+        ...prev,
+        playStore: {
+          ...(prev.playStore || {}),
+          screenshots: current,
+        },
+      };
+    });
+  }
+
+  function removeScreenshot(idx) {
+    setConfig((prev) => {
+      const current = [...(prev.playStore?.screenshots || [])];
+      current.splice(idx, 1);
+      return {
+        ...prev,
+        playStore: {
+          ...(prev.playStore || {}),
+          screenshots: current,
+        },
+      };
+    });
   }
 
   // Nested section updater (for sections.section1, etc.)
@@ -294,7 +356,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
       const saveRes = await saveApkUrlAction(uploadData.apkUrl);
       if (saveRes.success) {
         updateField('apk', 'apkUrl', uploadData.apkUrl);
-        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! Active URL: ${uploadData.apkUrl}` });
+        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! Active URL: ${uploadData.apkUrl} (Older files cleaned)` });
       }
     } catch (err) {
       setStatus({ type: 'error', msg: `❌ Upload error: ${err.message}` });
@@ -457,6 +519,9 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
   }
 
   const currentApkUrl = config.apk?.apkUrl || config.apkUrl || '';
+  const activeTheme = config.activeTheme || 'imo';
+  const playStore = config.playStore || {};
+  const currentScreenshots = playStore.screenshots || [];
 
   return (
     <div className={styles.wrap}>
@@ -475,21 +540,32 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span>View Live Site ↗</span>
           </a>
-          <button className={`${styles.sideNavLink} ${activeTab === 'general' ? styles.active : ''}`} onClick={() => setActiveTab('general')}>
-            🌐 General &amp; Branding
+          <button className={`${styles.sideNavLink} ${activeTab === 'theme' ? styles.active : ''}`} onClick={() => setActiveTab('theme')}>
+            🎭 Theme Changer
           </button>
-          <button className={`${styles.sideNavLink} ${activeTab === 'hero' ? styles.active : ''}`} onClick={() => setActiveTab('hero')}>
-            🚀 Hero Section
-          </button>
-          <button className={`${styles.sideNavLink} ${activeTab === 'sections' ? styles.active : ''}`} onClick={() => setActiveTab('sections')}>
-            📱 Feature Sections
-          </button>
-          <button className={`${styles.sideNavLink} ${activeTab === 'colors' ? styles.active : ''}`} onClick={() => setActiveTab('colors')}>
-            🎨 Theme &amp; Colors
-          </button>
-          <button className={`${styles.sideNavLink} ${activeTab === 'links' ? styles.active : ''}`} onClick={() => setActiveTab('links')}>
-            🔗 Links &amp; Redirects
-          </button>
+          {activeTheme === 'playstore' ? (
+            <button className={`${styles.sideNavLink} ${activeTab === 'playstore' ? styles.active : ''}`} onClick={() => setActiveTab('playstore')}>
+              🏪 Play Store Details
+            </button>
+          ) : (
+            <>
+              <button className={`${styles.sideNavLink} ${activeTab === 'general' ? styles.active : ''}`} onClick={() => setActiveTab('general')}>
+                🌐 General &amp; Branding
+              </button>
+              <button className={`${styles.sideNavLink} ${activeTab === 'hero' ? styles.active : ''}`} onClick={() => setActiveTab('hero')}>
+                🚀 Hero Section
+              </button>
+              <button className={`${styles.sideNavLink} ${activeTab === 'sections' ? styles.active : ''}`} onClick={() => setActiveTab('sections')}>
+                📱 Feature Sections
+              </button>
+              <button className={`${styles.sideNavLink} ${activeTab === 'colors' ? styles.active : ''}`} onClick={() => setActiveTab('colors')}>
+                🎨 Theme &amp; Colors
+              </button>
+              <button className={`${styles.sideNavLink} ${activeTab === 'links' ? styles.active : ''}`} onClick={() => setActiveTab('links')}>
+                🔗 Links &amp; Redirects
+              </button>
+            </>
+          )}
           <button className={`${styles.sideNavLink} ${activeTab === 'apk' ? styles.active : ''}`} onClick={() => setActiveTab('apk')}>
             📦 APK Manager
           </button>
@@ -508,26 +584,37 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
       <main className={styles.main}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Site Customizer &amp; Admin Panel</h1>
-          <p className={styles.pageDesc}>Edit any text, customize colors, upload images, manage redirects, update APK downloads, or change passwords in real-time.</p>
+          <p className={styles.pageDesc}>Switch themes, edit texts, customize Google Play Store app details, upload images, or manage APK downloads.</p>
         </div>
 
         {/* TABS HEADER FOR MOBILE / QUICK SWITCH */}
         <div className={styles.tabsNav}>
-          <button className={`${styles.tabBtn} ${activeTab === 'general' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('general')}>
-            🌐 Branding
+          <button className={`${styles.tabBtn} ${activeTab === 'theme' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('theme')}>
+            🎭 Theme ({activeTheme === 'playstore' ? 'Play Store' : 'imo Landing'})
           </button>
-          <button className={`${styles.tabBtn} ${activeTab === 'hero' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('hero')}>
-            🚀 Hero
-          </button>
-          <button className={`${styles.tabBtn} ${activeTab === 'sections' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('sections')}>
-            📱 Features
-          </button>
-          <button className={`${styles.tabBtn} ${activeTab === 'colors' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('colors')}>
-            🎨 Colors
-          </button>
-          <button className={`${styles.tabBtn} ${activeTab === 'links' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('links')}>
-            🔗 Redirects
-          </button>
+          {activeTheme === 'playstore' ? (
+            <button className={`${styles.tabBtn} ${activeTab === 'playstore' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('playstore')}>
+              🏪 Play Store App Settings
+            </button>
+          ) : (
+            <>
+              <button className={`${styles.tabBtn} ${activeTab === 'general' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('general')}>
+                🌐 Branding
+              </button>
+              <button className={`${styles.tabBtn} ${activeTab === 'hero' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('hero')}>
+                🚀 Hero
+              </button>
+              <button className={`${styles.tabBtn} ${activeTab === 'sections' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('sections')}>
+                📱 Features
+              </button>
+              <button className={`${styles.tabBtn} ${activeTab === 'colors' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('colors')}>
+                🎨 Colors
+              </button>
+              <button className={`${styles.tabBtn} ${activeTab === 'links' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('links')}>
+                🔗 Redirects
+              </button>
+            </>
+          )}
           <button className={`${styles.tabBtn} ${activeTab === 'apk' ? styles.tabBtnActive : ''}`} onClick={() => setActiveTab('apk')}>
             📦 APK
           </button>
@@ -541,6 +628,277 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           <div className={`${styles.statusBanner} ${status.type === 'success' ? styles.statusSuccess : styles.statusError}`}>
             {status.msg}
           </div>
+        )}
+
+        {/* ==================== TAB 0: THEME CHANGER ==================== */}
+        {activeTab === 'theme' && (
+          <form onSubmit={handleSaveConfig} className={styles.form}>
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Choose Active Website Theme</h2>
+                <p className={styles.cardDesc}>Select which theme to display to visitors on the main homepage.</p>
+              </div>
+
+              <div className={styles.themeSelectorGrid}>
+                {/* Theme 1: imo Official Landing Page */}
+                <div
+                  className={`${styles.themeOptionCard} ${activeTheme !== 'playstore' ? styles.themeOptionCardActive : ''}`}
+                  onClick={() => switchTheme('imo')}
+                >
+                  <div className={styles.themeCardHeader}>
+                    <span className={styles.themeTitle}>
+                      <span>🌐</span> imo Official Landing Page
+                    </span>
+                    {activeTheme !== 'playstore' ? (
+                      <span className={styles.themeBadgeActive}>Active Theme</span>
+                    ) : (
+                      <span className={styles.themeBadgeInactive}>Click to Activate</span>
+                    )}
+                  </div>
+                  <p className={styles.themeCardDesc}>
+                    High-converting landing page with hero collage, feature cards (Audio/Video, Global Calls, Privacy, Security, Translation), and custom colors.
+                  </p>
+                </div>
+
+                {/* Theme 2: Google Play Store Theme */}
+                <div
+                  className={`${styles.themeOptionCard} ${activeTheme === 'playstore' ? styles.themeOptionCardActive : ''}`}
+                  onClick={() => switchTheme('playstore')}
+                >
+                  <div className={styles.themeCardHeader}>
+                    <span className={styles.themeTitle}>
+                      <span>🏪</span> Google Play Store Theme
+                    </span>
+                    {activeTheme === 'playstore' ? (
+                      <span className={styles.themeBadgeActive}>Active Theme</span>
+                    ) : (
+                      <span className={styles.themeBadgeInactive}>Click to Activate</span>
+                    )}
+                  </div>
+                  <p className={styles.themeCardDesc}>
+                    Authentic Google Play app details screen with app icon, rating stars, downloads, screenshot gallery, about app description, and instant Install button.
+                  </p>
+                </div>
+              </div>
+
+              <div className={styles.btnRow} style={{ marginTop: '16px' }}>
+                <button type="submit" className={styles.btnPrimary} disabled={saving}>
+                  {saving ? 'Saving…' : `💾 Save & Apply ${activeTheme === 'playstore' ? 'Play Store' : 'imo'} Theme`}
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {/* ==================== PLAY STORE THEME CUSTOMIZER TAB ==================== */}
+        {activeTab === 'playstore' && (
+          <form onSubmit={handleSaveConfig} className={styles.form}>
+            {/* 1. Basic App Info */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Google Play: App Identity &amp; Badges</h2>
+                <p className={styles.cardDesc}>Customize app title, developer label, category, and badges.</p>
+              </div>
+
+              <div className={styles.formGrid2}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>App Title / Name</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.appName || ''}
+                    onChange={(e) => updatePlayStoreField('appName', e.target.value)}
+                    placeholder="e.g. imo video calls and chat"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Developer Name</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.developer || ''}
+                    onChange={(e) => updatePlayStoreField('developer', e.target.value)}
+                    placeholder="e.g. imo.im"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Category</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.category || ''}
+                    onChange={(e) => updatePlayStoreField('category', e.target.value)}
+                    placeholder="e.g. Communication or Social"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Contains Ads / In-app Purchases Tag</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.containsAds || ''}
+                    onChange={(e) => updatePlayStoreField('containsAds', e.target.value)}
+                    placeholder="Contains ads · In-app purchases"
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: '16px' }}>
+                <ImageInput
+                  label="App Icon (Square icon on Google Play)"
+                  value={playStore.appIcon || ''}
+                  onChange={(val) => updatePlayStoreField('appIcon', val)}
+                  fieldId="playAppIcon"
+                />
+              </div>
+            </div>
+
+            {/* 2. Ratings, Reviews & Downloads */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Google Play: Ratings &amp; Metrics</h2>
+                <p className={styles.cardDesc}>Control the rating score, review count, and download numbers displayed on the cards.</p>
+              </div>
+
+              <div className={styles.formGrid2}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Rating Score (e.g. 4.3 or 4.8)</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.rating || ''}
+                    onChange={(e) => updatePlayStoreField('rating', e.target.value)}
+                    placeholder="4.3"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Reviews Count (e.g. 1M reviews or 500K reviews)</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.reviewsCount || ''}
+                    onChange={(e) => updatePlayStoreField('reviewsCount', e.target.value)}
+                    placeholder="1M reviews"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Downloads Badge (e.g. 500M+ or 1B+)</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.downloads || ''}
+                    onChange={(e) => updatePlayStoreField('downloads', e.target.value)}
+                    placeholder="500M+"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>Content Rating (e.g. Rated for 3+ or Teen)</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={playStore.contentRating || ''}
+                    onChange={(e) => updatePlayStoreField('contentRating', e.target.value)}
+                    placeholder="Rated for 3+"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Screenshots Gallery */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardTitleWrap}>
+                  <h2 className={styles.cardTitle}>App Screenshots Gallery</h2>
+                  <button
+                    type="button"
+                    className={styles.btnSmallPrimary}
+                    onClick={() => addScreenshot()}
+                  >
+                    + Add New Screenshot
+                  </button>
+                </div>
+                <p className={styles.cardDesc}>Upload or change the vertical screenshot mockups in the horizontal preview carousel.</p>
+              </div>
+
+              <div className={styles.screenshotsGrid}>
+                {currentScreenshots.map((src, idx) => (
+                  <div key={idx} className={styles.screenshotCard}>
+                    <div className={styles.screenshotPreviewWrap}>
+                      <img src={src} alt={`Screenshot ${idx + 1}`} className={styles.screenshotPreview} />
+                    </div>
+                    <div className={styles.screenshotActions}>
+                      <ImageInput
+                        label={`Screenshot #${idx + 1}`}
+                        value={src}
+                        onChange={(val) => updateScreenshot(idx, val)}
+                        fieldId={`screenshot_${idx}`}
+                      />
+                      <button
+                        type="button"
+                        className={styles.btnRemoveScreenshot}
+                        onClick={() => removeScreenshot(idx)}
+                      >
+                        ✕ Remove Screenshot
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 4. Descriptions & What's New */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>About This App &amp; Release Notes</h2>
+                <p className={styles.cardDesc}>Customize the descriptions, release notes, and update timestamp.</p>
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label className={styles.formLabel}>Updated On Timestamp</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={playStore.updatedOn || ''}
+                  onChange={(e) => updatePlayStoreField('updatedOn', e.target.value)}
+                  placeholder="e.g. Aug 14, 2026"
+                />
+              </div>
+
+              <div className={styles.inputGroup} style={{ marginTop: '14px' }}>
+                <label className={styles.formLabel}>About This App (Full Description)</label>
+                <textarea
+                  className={styles.textareaInput}
+                  value={playStore.aboutDescription || ''}
+                  onChange={(e) => updatePlayStoreField('aboutDescription', e.target.value)}
+                  placeholder="Full description..."
+                  style={{ minHeight: '120px' }}
+                />
+              </div>
+
+              <div className={styles.inputGroup} style={{ marginTop: '14px' }}>
+                <label className={styles.formLabel}>What's New (Release Notes)</label>
+                <textarea
+                  className={styles.textareaInput}
+                  value={playStore.whatsNew || ''}
+                  onChange={(e) => updatePlayStoreField('whatsNew', e.target.value)}
+                  placeholder="• Bug fixes and performance improvements"
+                  style={{ minHeight: '90px' }}
+                />
+              </div>
+
+              <div className={styles.btnRow} style={{ marginTop: '20px' }}>
+                <button type="submit" className={styles.btnPrimary} disabled={saving}>
+                  {saving ? 'Saving…' : '💾 Save Google Play App Details'}
+                </button>
+              </div>
+            </div>
+          </form>
         )}
 
         {/* ==================== TAB 1: GENERAL & BRANDING ==================== */}
@@ -1108,7 +1466,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
                     <span className={styles.inactiveBadge}>○ Not Configured</span>
                   )}
                 </div>
-                <p className={styles.cardDesc}>This file is delivered whenever visitors tap "Download Now" on phone or PC.</p>
+                <p className={styles.cardDesc}>This file is delivered whenever visitors tap "Download" or "Install" on any theme.</p>
               </div>
 
               <div className={styles.currentUrlBox}>
@@ -1177,7 +1535,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>Upload APK Package Directly</h2>
-                <p className={styles.cardDesc}>Upload an Android .apk package from your phone or PC. It will be stored and auto-activated.</p>
+                <p className={styles.cardDesc}>Upload an Android .apk package from your phone or PC. Older APK files will be automatically removed.</p>
               </div>
               <div className={styles.uploadZone} onClick={() => apkFileRef.current?.click()} id="upload-zone">
                 <input
@@ -1202,7 +1560,7 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
                       </svg>
                     </div>
                     <p className={styles.uploadLabel}>Tap or Click to Select <strong>.apk</strong> File</p>
-                    <p className={styles.uploadHint}>Saved to <code>/public/apk/</code></p>
+                    <p className={styles.uploadHint}>Saved to <code>/public/apk/</code> (Older APKs auto-deleted)</p>
                     <button
                       type="button"
                       className={styles.btnUploadSmall}

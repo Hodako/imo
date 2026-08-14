@@ -98,6 +98,29 @@ const DEFAULT_CONFIG = {
     footerBg: '#131b21',
     footerText: '#ffffff',
   },
+  activeTheme: 'imo', // 'imo' | 'playstore'
+  playStore: {
+    appName: 'imo video calls and chat',
+    developer: 'imo.im',
+    containsAds: 'Contains ads · In-app purchases',
+    rating: '4.3',
+    reviewsCount: '1M reviews',
+    downloads: '500M+',
+    contentRating: 'Rated for 3+',
+    appIcon: '/imo_files/imo.30ad61b6.png',
+    category: 'Communication',
+    updatedOn: 'Aug 14, 2026',
+    shortDescription: 'Free high-quality video, voice calls and instant messaging for Android.',
+    aboutDescription: `imo is a free, simple, and faster video calling & instant messaging app. Send text or voice messages or video call with your friends and family easily and quickly, even with a poor network signal.\n\n✔️ Compatible with all networks: Free and unlimited instant messages and audio or video calls over 2G, 3G, 4G, 5G, or Wi-Fi.\n✔️ High-quality audio & video: Crystal clear & HD video calls to keep in touch with family.\n✔️ Multi-media sharing: Fast photo and video sharing, voice messages, and documents.\n✔️ International calls: Make free international calls to your loved ones without extra charges.`,
+    whatsNew: `• Improved connection stability for HD video calls\n• Bug fixes and overall performance improvements\n• Enhanced instant message translation accuracy`,
+    screenshots: [
+      '/imo_files/bg-video-call.6259fb3f.png',
+      '/imo_files/global-call.a744bcae.png',
+      '/imo_files/bg-private.2df28805.png',
+      '/imo_files/bg-secure.6c5e7e8b.png',
+      '/imo_files/bg-translate.9257ccaa.png',
+    ],
+  },
   apk: {
     apkUrl: '',
   },
@@ -151,6 +174,7 @@ export async function getStoredConfig() {
         },
         links: { ...DEFAULT_CONFIG.links, ...(parsed.links || {}) },
         colors: { ...DEFAULT_CONFIG.colors, ...(parsed.colors || {}) },
+        playStore: { ...DEFAULT_CONFIG.playStore, ...(parsed.playStore || {}) },
         apk: { ...DEFAULT_CONFIG.apk, ...(parsed.apk || {}) },
       };
     } catch {
