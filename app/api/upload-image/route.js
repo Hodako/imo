@@ -1,18 +1,11 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
-    const cookieStore = await cookies();
-    const isAuthed = cookieStore.get('imo_admin_session')?.value === 'true';
-    if (!isAuthed) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-    }
-
     const formData = await request.formData();
     const file = formData.get('image');
 
@@ -20,10 +13,6 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'No image file provided' }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Validate image extension
     const originalName = file.name || 'image.png';
     const ext = path.extname(originalName).toLowerCase() || '.png';
     const allowed = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif', '.ico'];
@@ -35,7 +24,10 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const uploadDir = path.join(process.cwd(), 'public', 'imo_files');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -46,7 +38,7 @@ export async function POST(request) {
 
     fs.writeFileSync(filePath, buffer);
 
-    const imageUrl = `/uploads/${fileName}`;
+    const imageUrl = `/imo_files/${fileName}`;
 
     return NextResponse.json({
       success: true,
