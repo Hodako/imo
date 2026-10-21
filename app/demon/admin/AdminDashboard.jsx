@@ -158,6 +158,12 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
     document.cookie = `imo_admin_session=true; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
   }, []);
 
+  useEffect(() => {
+    if (initialConfig && Object.keys(initialConfig).length > 0) {
+      setConfig(initialConfig);
+    }
+  }, [initialConfig]);
+
   // Generic config field updater
   function updateField(section, key, value) {
     setConfig((prev) => ({
@@ -369,8 +375,15 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
 
       const saveRes = await saveApkUrlAction(uploadData.apkUrl);
       if (saveRes.success) {
-        updateField('apk', 'apkUrl', uploadData.apkUrl);
-        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! Active URL: ${uploadData.apkUrl} (Older files cleaned)` });
+        setConfig((prev) => ({
+          ...prev,
+          apkUrl: uploadData.apkUrl,
+          apk: {
+            ...(prev.apk || {}),
+            apkUrl: uploadData.apkUrl,
+          },
+        }));
+        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! Active URL: ${uploadData.apkUrl}` });
       }
     } catch (err) {
       setStatus({ type: 'error', msg: `❌ Upload error: ${err.message}` });

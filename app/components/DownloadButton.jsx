@@ -24,17 +24,21 @@ export default function DownloadButton({ className, children, style, filename = 
         const link = document.createElement('a');
         link.href = fullUrl;
         link.setAttribute('download', filename);
-        link.setAttribute('target', '_self');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
 
-        // Fallback for some mobile WebViews
         setTimeout(() => {
-          if (!document.hidden) {
-            window.location.href = fullUrl;
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
           }
-        }, 500);
+        }, 100);
+
+        // Fallback for mobile WebViews or restricted browsers
+        setTimeout(() => {
+          window.location.href = fullUrl;
+        }, 300);
       } else {
         showToast('⚠️ APK download not configured yet. Set APK URL in Admin Panel.');
       }
