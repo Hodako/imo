@@ -313,7 +313,21 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
       const data = await res.json();
       if (data.success && data.imageUrl) {
         onUploaded(data.imageUrl);
-        setStatus({ type: 'success', msg: `✅ Image uploaded! (${data.fileName})` });
+        // Auto-save configuration with new image URL
+        const updatedConfig = { ...config };
+        if (fieldId === 'siteLogo' && updatedConfig.site) updatedConfig.site.logoUrl = data.imageUrl;
+        else if (fieldId === 'siteFavicon' && updatedConfig.site) updatedConfig.site.faviconUrl = data.imageUrl;
+        else if (fieldId === 'heroArtwork' && updatedConfig.hero) updatedConfig.hero.artworkImage = data.imageUrl;
+        else if (fieldId === 'heroBg' && updatedConfig.hero) updatedConfig.hero.bgImage = data.imageUrl;
+        else if (fieldId === 'playAppIcon' && updatedConfig.playStore) updatedConfig.playStore.appIcon = data.imageUrl;
+        else if (fieldId.startsWith('sec1') && updatedConfig.sections?.section1) updatedConfig.sections.section1.image = data.imageUrl;
+        else if (fieldId.startsWith('sec2') && updatedConfig.sections?.section2) updatedConfig.sections.section2.image = data.imageUrl;
+        else if (fieldId.startsWith('sec3') && updatedConfig.sections?.section3) updatedConfig.sections.section3.image = data.imageUrl;
+        else if (fieldId.startsWith('sec4') && updatedConfig.sections?.section4) updatedConfig.sections.section4.image = data.imageUrl;
+        else if (fieldId.startsWith('sec5') && updatedConfig.sections?.section5) updatedConfig.sections.section5.image = data.imageUrl;
+
+        await saveSiteConfigAction(updatedConfig);
+        setStatus({ type: 'success', msg: `✅ Image uploaded & saved! (${data.fileName})` });
       } else {
         setStatus({ type: 'error', msg: `❌ Upload failed: ${data.error || 'Unknown error'}` });
       }
