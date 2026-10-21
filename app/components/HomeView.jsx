@@ -8,7 +8,7 @@ export default function HomeView({ initialConfig = {} }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/site-config')
+    fetch(`/api/site-config?_t=${Date.now()}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.config) {

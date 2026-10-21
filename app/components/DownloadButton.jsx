@@ -10,7 +10,7 @@ export default function DownloadButton({ className, children, style, filename = 
 
     try {
       setDownloading(true);
-      const res = await fetch('/api/apk-config');
+      const res = await fetch(`/api/apk-config?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
 
       const apkUrl = data.apkUrl || '';

@@ -9,7 +9,7 @@ export default function PlayStoreView({ initialConfig = {} }) {
   const [showFullAbout, setShowFullAbout] = useState(false);
 
   useEffect(() => {
-    fetch('/api/site-config')
+    fetch(`/api/site-config?_t=${Date.now()}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.config) {

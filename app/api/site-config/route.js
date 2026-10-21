@@ -7,7 +7,13 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const config = await getStoredConfig();
-    return NextResponse.json({ success: true, config });
+    return NextResponse.json({ success: true, config }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

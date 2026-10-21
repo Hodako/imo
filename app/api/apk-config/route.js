@@ -43,7 +43,13 @@ function getApkConfig() {
 export async function GET() {
   try {
     const data = getApkConfig();
-    return NextResponse.json({ apkUrl: data.apkUrl || '', adminPassword: data.adminPassword });
+    return NextResponse.json({ apkUrl: data.apkUrl || '', adminPassword: data.adminPassword }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch {
     return NextResponse.json({ apkUrl: '', adminPassword: DEFAULT_PASSWORD });
   }
