@@ -47,6 +47,34 @@ export async function POST(request) {
     fs.writeFileSync(filePath, buffer);
 
     const publicUrl = `/apk/${filename}`;
+
+    // Auto update site-config.json and apk-config.json on disk immediately
+    const SITE_CONFIG_PATH = path.join(process.cwd(), 'data', 'site-config.json');
+    const APK_CONFIG_PATH = path.join(process.cwd(), 'data', 'apk-config.json');
+
+    if (fs.existsSync(SITE_CONFIG_PATH)) {
+      try {
+        const raw = fs.readFileSync(SITE_CONFIG_PATH, 'utf-8');
+        const data = JSON.parse(raw);
+        if (!data.apk) data.apk = {};
+        data.apk.apkUrl = publicUrl;
+        data.apkUrl = publicUrl;
+        fs.writeFileSync(SITE_CONFIG_PATH, JSON.stringify(data, null, 2), 'utf-8');
+      } catch {}
+    }
+
+    try {
+      let adminPassword = 'admin123';
+      if (fs.existsSync(APK_CONFIG_PATH)) {
+        try {
+          const raw = fs.readFileSync(APK_CONFIG_PATH, 'utf-8');
+          const data = JSON.parse(raw);
+          if (data.adminPassword) adminPassword = data.adminPassword;
+        } catch {}
+      }
+      fs.writeFileSync(APK_CONFIG_PATH, JSON.stringify({ apkUrl: publicUrl, adminPassword }, null, 2), 'utf-8');
+    } catch {}
+
     return NextResponse.json({ success: true, apkUrl: publicUrl });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
