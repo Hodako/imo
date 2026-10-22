@@ -1,7 +1,7 @@
 {
   "adminPassword": "admin123",
   "site": {
-    "title": "imo - Free Video Calls and Chat",
+    "title": "Whatsapp - Free Video Calls and Chat",
     "name": "Whatsapp",
     "description": "Whatsapp is a free, simple, and secure video calling and instant messaging app.",
     "logoUrl": "/imo_files/imo.30ad61b6.png",
@@ -89,8 +89,8 @@
   },
   "activeTheme": "playstore",
   "playStore": {
-    "appName": "imo video calls and chat",
-    "developer": "imo.im",
+    "appName": "Whatsapp",
+    "developer": "WhatsApp LLC",
     "containsAds": "Contains ads · In-app purchases",
     "rating": "4.3",
     "reviewsCount": "1M reviews",
@@ -100,7 +100,7 @@
     "category": "Communication",
     "updatedOn": "Aug 14, 2026",
     "shortDescription": "Free high-quality video, voice calls and instant messaging for Android.",
-    "aboutDescription": "imo is a free, simple, and faster video calling & instant messaging app. Send text or voice messages or video call with your friends and family easily and quickly, even with a poor network signal.\n\n✔️ Compatible with all networks: Free and unlimited instant messages and audio or video calls over 2G, 3G, 4G, 5G, or Wi-Fi.\n✔️ High-quality audio & video: Crystal clear & HD video calls to keep in touch with family.\n✔️ Multi-media sharing: Fast photo and video sharing, voice messages, and documents.\n✔️ International calls: Make free international calls to your loved ones without extra charges.",
+    "aboutDescription": "Whatsapp is a free, simple, and faster video calling & instant messaging app. Send text or voice messages or video call with your friends and family easily and quickly, even with a poor network signal.\n\n✔️ Compatible with all networks: Free and unlimited instant messages and audio or video calls over 2G, 3G, 4G, 5G, or Wi-Fi.\n✔️ High-quality audio & video: Crystal clear & HD video calls to keep in touch with family.\n✔️ Multi-media sharing: Fast photo and video sharing, voice messages, and documents.\n✔️ International calls: Make free international calls to your loved ones without extra charges.",
     "whatsNew": "• Improved connection stability for HD video calls\n• Bug fixes and overall performance improvements\n• Enhanced instant message translation accuracy",
     "screenshots": [
       "/imo_files/bg-video-call.6259fb3f.png",
@@ -111,7 +111,10 @@
     ]
   },
   "apk": {
-    "apkUrl": "/apk/imo-1792612103178.apk"
+    "apkUrl": "/apk/Whatsapp.apk",
+    "fileName": "Whatsapp.apk",
+    "originalName": "Whatsapp.apk",
+    "fileSize": "1.0 MB"
   },
-  "apkUrl": "/apk/imo-1792612103178.apk"
+  "apkUrl": "/apk/Whatsapp.apk"
 }

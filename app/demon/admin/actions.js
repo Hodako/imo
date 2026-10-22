@@ -123,6 +123,9 @@ const DEFAULT_CONFIG = {
   },
   apk: {
     apkUrl: '',
+    fileName: '',
+    originalName: '',
+    fileSize: '',
   },
 };
 
@@ -185,6 +188,7 @@ export async function getStoredConfig() {
       const legacyRaw = fs.readFileSync(APK_CONFIG_PATH, 'utf-8');
       const legacy = JSON.parse(legacyRaw);
       if (legacy.apkUrl) config.apk.apkUrl = legacy.apkUrl;
+      if (legacy.fileName) config.apk.fileName = legacy.fileName;
       if (legacy.adminPassword) config.adminPassword = legacy.adminPassword;
     } catch {
       // fallback
@@ -206,6 +210,10 @@ export async function saveStoredConfig(data) {
   try {
     const legacy = {
       apkUrl: data.apk?.apkUrl || data.apkUrl || '',
+      fileName: data.apk?.fileName || '',
+      originalName: data.apk?.originalName || '',
+      fileSize: data.apk?.fileSize || '',
+      appName: data.playStore?.appName || data.site?.name || '',
       adminPassword: data.adminPassword || DEFAULT_PASSWORD,
     };
     fs.writeFileSync(APK_CONFIG_PATH, JSON.stringify(legacy, null, 2), 'utf-8');
@@ -271,11 +279,18 @@ export async function saveSiteConfigAction(updatedPartial) {
     adminPassword: current.adminPassword, // keep password safe
   };
 
+  // If site name changed and playStore.appName is still default imo, sync it
+  if (merged.site?.name && merged.site.name !== 'imo') {
+    if (merged.playStore && (merged.playStore.appName === 'imo video calls and chat' || !merged.playStore.appName)) {
+      merged.playStore.appName = merged.site.name;
+    }
+  }
+
   await saveStoredConfig(merged);
   return { success: true, config: merged };
 }
 
-export async function saveApkUrlAction(newUrl) {
+export async function saveApkUrlAction(newUrl, apkMeta = {}) {
   const cookieStore = await cookies();
   const isAuthed = cookieStore.get('imo_admin_session')?.value === 'true';
   if (!isAuthed) return { success: false, error: 'Unauthorized' };
@@ -283,10 +298,13 @@ export async function saveApkUrlAction(newUrl) {
   const config = await getStoredConfig();
   config.apk = config.apk || {};
   config.apk.apkUrl = (newUrl || '').trim();
+  if (apkMeta.fileName) config.apk.fileName = apkMeta.fileName;
+  if (apkMeta.originalName) config.apk.originalName = apkMeta.originalName;
+  if (apkMeta.fileSize) config.apk.fileSize = apkMeta.fileSize;
   config.apkUrl = config.apk.apkUrl;
 
   await saveStoredConfig(config);
-  return { success: true, apkUrl: config.apk.apkUrl };
+  return { success: true, apkUrl: config.apk.apkUrl, apk: config.apk };
 }
 
 export async function changePasswordAction(currentPassword, newPassword) {
